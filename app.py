@@ -31,8 +31,11 @@ def get_uploaded_file():
         return render_template('error_uploading.html')
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
-    # convert_to_txt(uploaded_file)
-    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
+
+
+    filename = secure_filename(uploaded_file.filename)
+
+    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
 
     generate_multiple_choice_questions()
     return redirect(url_for('home'))
