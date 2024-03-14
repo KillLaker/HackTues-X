@@ -217,7 +217,7 @@ def create_quiz(quiz, owner_id):
 
 def get_user(username, password):
 
-    cursor.execute("select * from Users where user_validator = %s", (username,))
+    cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
     print(user)
 
