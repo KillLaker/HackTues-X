@@ -7,9 +7,21 @@ import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
 from openaiApi import generate_multiple_choice_questions
+from openai import OpenAI
 # from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
+from convert_files_to_txt import *
+
 import os
+
+cnx = mysql.connector.connect(
+    user='hacktuesx',
+    password='tues10!tues',
+    host='hacktuesx.mysql.database.azure.com',
+    database="hacktuesx"
+)
+
+cursor = cnx.cursor()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
@@ -36,8 +48,6 @@ def get_uploaded_file():
         return render_template('error_uploading.html')
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
-    # convert_to_txt(uploaded_file)
-    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
 
     #! quiz = generate_multiple_choice_questions()
 
@@ -58,6 +68,16 @@ def get_uploaded_file():
     # create_quiz(quiz)
     get_all_quizzes()
 
+
+    filename = secure_filename(uploaded_file.filename)
+
+    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
+
+    text = convert_file_to_text(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
+
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
+        f.write(text)
+    # generate_multiple_choice_questions()
     return redirect(url_for('home'))
 
 
@@ -140,25 +160,15 @@ def create_quiz(quiz):
 
 
 def get_user(username, password):
-    conn = mysql.connector.connect(
-        host="localhost",
-        user="user_validator",
-        password="user_validator_password",
-        database="user-database"
-    )
 
-    cursor = conn.cursor()
-
-    cursor.execute("select * from User where username = %s", (username,))
+    cursor.execute("select * from Users where user_validator = %s", (username,))
     user = cursor.fetchone()
 
     print(user)
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
-        conn.close()
         return user
 
-    conn.close()
     return None
 
 
@@ -181,7 +191,11 @@ def submit_quiz(quiz_id):
                 selected_options.append(value)
 
     post_request_text = '\n'.join(selected_options) # Answers only letters
-    return 'Quiz submitted!' + post_request_text
+
+    filename = f'D:/HackTues-X/Student_answers/student_{quiz_id}.txt'
+    with open(filename, 'w') as f:
+        f.write(post_request_text)
+    return 'Quiz submitted! Answers saved in ' + filename
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

@@ -2,6 +2,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+
 def generate_multiple_choice_questions():
     load_dotenv()
 
@@ -46,9 +47,10 @@ def generate_multiple_choice_questions():
                 current_answers = []
                 current_right_answer = ""
             current_question = line
-        elif line.startswith(("a)", "b)", "c)", "d)", "A.", "B.", "C.", "D.")) or line.startswith(("A)", "B)", "C)", "D)")):
+        elif line.startswith(("a)", "b)", "c)", "d)", "A.", "B.", "C.", "D.")) or line.startswith(
+                ("A)", "B)", "C)", "D)")):
             current_answers.append(line)
-        
+
         elif line.startswith("Answer: "):
             current_right_answer = line.split(":")[1].strip()
 
@@ -66,4 +68,9 @@ def generate_multiple_choice_questions():
     #     print("Right answer:", question["right_answer"])
     return questions
 
+<<<<<<< HEAD
+
 generate_multiple_choice_questions()
+=======
+# generate_multiple_choice_questions()
+>>>>>>> 7e051f141356f390ba685ad758aa0ae541eee37b
