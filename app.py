@@ -4,9 +4,12 @@ import mysql.connector
 import argon2
 import jwt
 import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash
+from jinja2 import Environment, PackageLoader, select_autoescape
 from openaiApi import generate_multiple_choice_questions
 # from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
@@ -116,6 +119,19 @@ def generate_token(id):
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
+
+
+@app.route('/quiz/<int:quiz_id>/submit', methods=['POST'])
+def submit_quiz(quiz_id):
+    form_data = request.form
+    selected_options = []
+    for key, value in form_data.items():
+        if key.startswith('question_'):
+            if value:
+                selected_options.append(value)
+
+    post_request_text = '\n'.join(selected_options) # Answers only letters
+    return 'Quiz submitted!' + post_request_text
 
 
 if __name__ == "__main__":
