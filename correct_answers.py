@@ -28,6 +28,5 @@ def combine_student_answers(directory):
                 combined_file.write(f'user id: {student_id}\n')
                 with open(os.path.join(directory, filename), 'r') as student_file:
                     combined_file.write(student_file.read())
-                combined_file.write('\n---\n')
 
 combine_student_answers('Student_answers/')
