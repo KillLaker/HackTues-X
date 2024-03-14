@@ -14,6 +14,9 @@ from convert_files_to_txt import *
 
 import os
 
+# TODO fix imports and reorganize code
+
+# ! move the sensitive data to .env file
 cnx = mysql.connector.connect(
     user='hacktuesx',
     password='tues10!tues',
@@ -21,10 +24,11 @@ cnx = mysql.connector.connect(
     database="hacktuesx"
 )
 
+# ! remove this
 cursor = cnx.cursor()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
+app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871' #! os.getenv("SECRET_KEY")
 
 @app.route("/", methods=['GET'])
 def home():
@@ -139,19 +143,53 @@ def get_tables():
 
 get_tables()
 
-def create_quiz(quiz):
+# ! create quiz tables
+def create_quiz_tables():
+    cursor = cnx.cursor()
+    cursor.execute("""
+        CREATE TABLE quiz (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            name VARCHAR(255),
+            ownerId INT,
+            FOREIGN KEY (ownerId) REFERENCES user(id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE questions (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            quiz_id INT, 
+            question_text TEXT, 
+            FOREIGN KEY (quiz_id) REFERENCES quiz(id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE options (
+            id INT AUTO_INCREMENT PRIMARY KEY, 
+            question_id INT, 
+            option_text TEXT, 
+            is_correct BOOLEAN, 
+            FOREIGN KEY (question_id) REFERENCES questions(id)
+        )
+    """)
+
+    cursor.close()
+
+# ! create quiz insert
+def create_quiz(quiz, owner_id):
     cursor = cnx.cursor()
 
-    for question in quiz:
-        cursor.execute("INSERT INTO quizzes (name) VALUES (%s)", (question['question'],))
-        quiz_id = cursor.lastrowid
+    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (quiz['title'], owner_id))
+    quiz_id = cursor.lastrowid
 
+    for question in quiz['questions']:
         cursor.execute("INSERT INTO questions (quiz_id, question_text) VALUES (%s, %s)", (quiz_id, question['question']))
         question_id = cursor.lastrowid
 
-        for option in question['answers']:
-            is_correct = (option == question['right_answer'])
-            cursor.execute("INSERT INTO answers (question_id, answer_text, is_correct) VALUES (%s, %s, %s)", (question_id, option, is_correct))
+        for option in question['options']:
+            is_correct = (option == question['correct'])
+            cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)", (question_id, option, is_correct))
 
     cnx.commit()
     cursor.close()
@@ -162,7 +200,6 @@ def get_user(username, password):
 
     cursor.execute("select * from Users where user_validator = %s", (username,))
     user = cursor.fetchone()
-
     print(user)
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
