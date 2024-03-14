@@ -1,0 +1,24 @@
+user id: 1
+A
+C
+D
+A
+---
+user id: 2
+A
+A
+A
+A
+---
+user id: 3
+A
+B
+C
+D
+---
+user id: 4
+D
+D
+B
+B
+---
