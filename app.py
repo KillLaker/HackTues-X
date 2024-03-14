@@ -25,7 +25,7 @@ def get_uploaded_file():
 
     app.config['UPLOAD_FOLDER'] = './static/uploads'
 
-    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
+    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], './quiz-source.txt'))
 
     return redirect(url_for('home'))
 
