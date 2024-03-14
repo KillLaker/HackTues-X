@@ -1,89 +1,80 @@
-Комутация на верига с мрежово напрежение с реле
+Authentication vs. Authorization
 
-● Комутацията (включване и изключване) с реле е основен начин за
-включване и изключване на консуматори с микроконтролер
-● Основни параметри на релето са:
-○ максимално напрежение на контактите
-○ максимален ток през контактите
-○ Необходимо напрежение и ток на намотката за задействане на релето
-● Управлението на самото реле обикновено става не директно от изхода
-на микроконтролера, а чрез междинно стъпало - транзистор, оптрон и др.
-● Важна особеност е натрупаната в намотката енергия, която трябва да се
-отведе при спиране на подаването на напрежение на намотката
+What&#39;s the difference between authentication and
+authorization? Authentication confirms that users are who they say
+they are. Authorization gives those users permission to access a
+resource.
+While authentication and authorization might sound similar, they are
+distinct security processes in the world of identity and access
+management (IAM).
+What Is Authentication?
+Authentication is the act of validating that users are whom they claim
+to be. This is the first step in any security process. 
+An authentication process is complete with:
+ Passwords - usernames and passwords are the most common
+authentication factors. If a user enters the correct data, the system
+assumes the identity is valid and grants access.
+ One-time pins - grant access for only one session or transaction.
+ Authentication apps - generate security codes via an outside party
+that grants access.
+ Biometrics - a user presents a fingerprint or eye scan to gain
+access to the system. 
+In some instances, systems require the successful verification of more
+than one factor before granting access. This multi-factor authentication
+(MFA) requirement is often deployed to increase security beyond what
+passwords alone can provide.
+What Is Authorization?
+Authorization in system security is the process of giving the user
+permission to access a specific resource or function. This term is often
+used interchangeably with access control or client privilege.
+Giving someone permission to download a particular file on a server or
+providing individual users with administrative access to an application
+are good examples of authorization.
+In secure environments, authorization must always follow authentication.
+Users should first prove that their identities are genuine before an
+organization’s administrators grant them access to the requested
+resources.
+Authentication vs. Authorization
 
-5
+Authentication vs. Authorization
 
-Обща конструкция на реле
-● Релето е електромеханичен компонент
-● Състои се от:
-○ управляваща намотка с електромагнит и котва
-○ един или повече единични или превключващи
-контакти
+1
 
-● Контакт на релето е нормално отворен
-(Normally Open - NO), когато при
-неактивирана намотка контактът е отворен
-● Контакт на релето е нормално затворен
-(Normally Closed - NC), когато при
-неактивирана намотка контактът е затворен
-
-6
-
-Реле - илюстрации
-
-7
-
-Комутация на верига с мрежово напрежение с реле
-
-8
-
-http://mcu-bg.com/mcu_site/viewtopic.php?f=4&t=15419
-
-Управление на реле
-
-● Поради факта, че за активиране
-на намотката се изисква ток над
-допустимия за изходите на
-микроконтролерите, релетата се
-управляват с междинно стъпало.
-Най-често това е транзистор. Ако
-е необходимо галванично
-разделяне, може да се използва
-и оптрон.
-
-https://arduino-kit.ru/blogs/blog/project_12 9
-
-Предпазване от обратен ток
-● При спиране на подаване на напрежение
-към намотката, поради натрупаната в
-нея магнитна енергия, на управляващите
-изводи на релето се появява напрежение
-с обратен на подадения поляритет и
-сравнително висока стойност.
-● Натрупаната енергия се отвежда през
-помощния диод, който осигурява път за
-протичане на т.нар. “обратен ток”и
-предотвратява повреда в междинното
-стъпало.
-
-Тиристор
-● Тиристорът е полупроводников елемент с четири полупроводникови
-области и три прехода.
-● Междинната P област е тънка и се нарича Гейт (Gate). Напрежението,
-подадено на нея служи за управление на отпушването на тиристора
-● Съществува аналогия на този елемент с два транзистора - PNP и NPN,
-свързани по специфичен начин
-
-Управление на подаваната мощност чрез тиристор
-
-● Чрез подаване на кратък импулс
-на гейта на тиристора, той се
-отпушва
-● При променливотоково
-(мрежово) захранване, това
-може да се направи в различни
-моменти от периода на
-синусоидалното напрежение
-● По този начин в консуматора се
-отдава повече или по-малко
-енергия
+Despite the similar-sounding terms, authentication and authorization are
+separate steps in the login process. Understanding the difference
+between the two is key to successfully implementing an IAM solution.
+Let&#39;s use an analogy to outline the differences.
+Consider a person walking up to a locked door to provide care to a pet
+while the family is away on vacation. That person needs:
+ Authentication, in the form of a key. The lock on the door only
+grants access to someone with the correct key in much the same
+way that a system only grants access to users who have the
+correct credentials.
+ Authorization, in the form of permissions. Once inside, the person
+has the authorization to access the kitchen and open the cupboard
+that holds the pet food. The person may not have permission to go
+into the bedroom for a quick nap. 
+Authentication and authorization work together in this example. A pet
+sitter has the right to enter the house (authentication), and once there,
+they have access to certain areas (authorization).
+Systems implement these concepts in the same way, so it’s crucial that
+IAM administrators understand how to utilize both:
+ Authentication - Let every staff member access your workplace
+systems if they provide the right credentials in response to your
+chosen authentication requirements.
+ Authorization - Grant permission to department-specific files, and
+reserve access to confidential data, such as financial information,
+as needed. Ensure that employees have access to the files they
+need to do their jobs.
+The OpenID Connect (OIDC) protocol is built on the OAuth 2.0 protocol
+and helps authenticate users and convey information about them. The
+OAuth 2.0 protocol controls authorization to access a protected
+resource, like your web app, native app, or API service.
+The OAuth 2.0 protocol provides API security through scoped access
+tokens. OAuth 2.0 enables you to delegate authorization, while OIDC
+enables you to retrieve and store authentication information about your
+end users. OIDC extends OAuth 2.0 by providing user authentication
+and single sign-on (SSO) functionality.
+SSO - an authentication method that enables users to securely
+authenticate with multiple applications and websites by using just one
+set of credentials.
