@@ -1,60 +1,161 @@
-body {
-    background-color: #ffddb6;
+/*body {*/
+/*    background-color: #ffddb6;*/
+/*}*/
+
+/*#form-div {*/
+/*    position: absolute;*/
+/*    left: 50%;*/
+/*    top: 50%;*/
+/*    transform:  translate(-50%, -120%);*/
+/*}*/
+
+/*#file-field{*/
+/*    display: none;*/
+/*}*/
+
+/*#file-field-label {*/
+/*    border-style: solid;*/
+/*    border-color: saddlebrown;*/
+/*    background-color: #e5a987;*/
+/*    display: block;*/
+/*    height: 100px;*/
+/*    width: 240px;*/
+/*    text-align: center;*/
+/*    line-height: 100px;*/
+/*    font-size: 30px;*/
+/*    border-radius: 10%;*/
+/*}*/
+
+/*#file-field-label:hover {*/
+/*    background-color: #9c6b4b;*/
+/*}*/
+
+/*#submit-field {*/
+/*    display: none*/
+/*}*/
+
+/*#submit-field-label {*/
+/*    position: absolute;*/
+/*    display: block;*/
+/*    border-style: solid;*/
+/*    border-color: saddlebrown;*/
+/*    height: 40px;*/
+/*    width: 100px;*/
+/*    transform: translateX(70%);*/
+/*    text-align: center;*/
+/*    line-height: 40px;*/
+/*    font-size: 20px;*/
+/*    border-radius: 10%;*/
+/*    background-color: #e5a987;*/
+/*}*/
+
+/*#submit-field-label:hover {*/
+/*    background-color: #9c6b4b;*/
+/*}*/
+
+/*#chosen-file {*/
+/*    font-style: italic;*/
+/*    text-align: center;*/
+/*    transform: translateY(-50%);*/
+/*}*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; flex-direction: column; color: white;background: rgb(64,26,74);background: linear-gradient(90deg, rgba(64,26,74,1) 0%, rgba(2,0,36,1) 50%, rgba(65,20,77,1) 100%);}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
+input[type=number] {-moz-appearance: textfield;}
+input:focus{outline: none;}
+.w-50{width: 50%;}
+.w-70{width: 70%;}
+.px-20{padding: 20px;}
+.text-left{text-align: left;}
+.text-center{text-align: center;}
+.left{ float: left; }
+.mx-20{margin: 20px 0;}
+.p-53015{padding: 5px 30px 15px;}
+
+#main-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20%;
 }
 
-#form-div {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform:  translate(-50%, -120%);
+#file-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-#file-field{
+#file-field {
     display: none;
 }
 
 #file-field-label {
-    border-style: solid;
-    border-color: saddlebrown;
-    background-color: #e5a987;
-    display: block;
-    height: 100px;
-    width: 240px;
+    background-color: #571290;
+    color: white;
+    padding: 20px 40px;
+    font-size: 1.5em;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
     text-align: center;
-    line-height: 100px;
-    font-size: 30px;
-    border-radius: 10%;
+    line-height: 50px;
+    border: none;
+    border-radius: 25px; /* Rounded corners for the button */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    margin-bottom: 20px; /* Spacing between this button and other elements */
+    transition: background-color 0.3s ease;
+    width: 320px;
+    height: 50px;
 }
 
 #file-field-label:hover {
-    background-color: #9c6b4b;
+    background-color: #742cb8; /* Slightly lighter color on hover */
 }
 
 #submit-field {
-    display: none
+    display: none;
 }
 
 #submit-field-label {
-    position: absolute;
-    display: block;
-    border-style: solid;
-    border-color: saddlebrown;
-    height: 40px;
-    width: 100px;
-    transform: translateX(70%);
+    text-transform: uppercase;
     text-align: center;
+    height: 40px;
+    width: 150px;
+    font-size: large;
+    background: #571290;
+    box-shadow: 0px 5px 50px black;
+    transition: 0.2s linear;
+    border-style: dashed;
+    border-color: lightgrey;
+    color: white;
+    cursor: pointer;
+    border-radius: 40px;
     line-height: 40px;
-    font-size: 20px;
-    border-radius: 10%;
-    background-color: #e5a987;
 }
 
 #submit-field-label:hover {
-    background-color: #9c6b4b;
+    background: #742cb8;
+    transition: 0.2s linear;
 }
 
 #chosen-file {
     font-style: italic;
     text-align: center;
-    transform: translateY(-50%);
+    transform: translateY(-150%);
+}
+
+#import-icon {
+    height: 60px;
+    width: 60px;
+    padding-right: 20px;
+    transform: translateY(-5px);
+}
+
+#import-button-content {
+    display: flex;
+    flex-direction: row;
 }

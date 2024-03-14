@@ -9,13 +9,13 @@
 </head>
 <body>
     <div class="sidebar">
-        <button class="create-quiz-btn"> Create new quiz</button>
+        <button class="create-quiz-btn">Create new quiz</button>
     </div>
     <div class="main-content">
         <h1 class="main-title">My Profile</h1>
-        <div class="quiz-item">Quiz 1</div>
-        <div class="quiz-item">Quiz 2</div>
-        <div class="quiz-item">Quiz 3</div>
+        {% for quiz in quizzes %}
+            <a href="/quiz/{{ quiz[0]['id'] }}" class="quiz-item">{{ quiz[0]['question'] }}</a>
+        {% endfor %}
     </div>
 
 </body>

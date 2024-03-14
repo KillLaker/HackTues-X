@@ -66,6 +66,6 @@ def generate_multiple_choice_questions():
     #     print("Question:", question["question"])
     #     print("Answers:", question["answers"])
     #     print("Right answer:", question["right_answer"])
-    return questions
 
+    return questions
 
