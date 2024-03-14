@@ -1,5 +1,5 @@
 flask
-mysql-connector-python 
+mysql-connector-python
 openai
 Werkzeug
 python-dotenv
@@ -7,3 +7,4 @@ tika
 argon2-cffi
 PyJWT
 tk
+requests
