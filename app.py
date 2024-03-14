@@ -82,7 +82,11 @@ def submit_quiz(quiz_id):
                 selected_options.append(value)
 
     post_request_text = '\n'.join(selected_options) # Answers only letters
-    return 'Quiz submitted!' + post_request_text
+
+    filename = f'D:/HackTues-X/Student_answers/student_{quiz_id}.txt'
+    with open(filename, 'w') as f:
+        f.write(post_request_text)
+    return 'Quiz submitted! Answers saved in ' + filename
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
