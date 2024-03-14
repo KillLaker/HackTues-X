@@ -27,6 +27,12 @@ def get_uploaded_file():
 
     return redirect(url_for('home'))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+
+    else:
+        return render_template("login.html")
 @app.route("/quiz/<int:quiz>")
 def quiz(quiz):
 
