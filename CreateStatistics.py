@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from tkinter import *
-
 import numpy as np
 
 import student_answers as s_a
