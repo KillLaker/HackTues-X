@@ -7,8 +7,10 @@ import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
 from openaiApi import generate_multiple_choice_questions
+from openai import OpenAI
 # from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
+
 import os
 
 app = Flask(__name__)
