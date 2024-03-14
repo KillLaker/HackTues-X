@@ -18,14 +18,13 @@ def get_uploaded_file():
     if 'uploaded-file' not in request.files:
         return render_template('error_uploading.html')
 
-    print("Filename" + uploaded_file.filename)
-
     if len(uploaded_file.filename) == 0:
         return render_template('error_uploading.html')
 
-    app.config['UPLOAD_FOLDER'] = './static/uploads'
+    app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
-    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], './quiz-source.txt'))
+    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
+
 
     return redirect(url_for('home'))
 
