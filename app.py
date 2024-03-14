@@ -26,13 +26,6 @@ cursor = cnx.cursor()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
 
-cnx = mysql.connector.connect(
-    user = 'hacktuesx',
-    password = 'tues10!tues',
-    host = 'hacktuesx.mysql.database.azure.com',
-    database = 'hacktuesx'
-)
-
 @app.route("/", methods=['GET'])
 def home():
     return render_template('index.html')
