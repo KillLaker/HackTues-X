@@ -13,6 +13,15 @@ from werkzeug.utils import secure_filename
 
 import os
 
+cnx = mysql.connector.connect(
+    user='hacktuesx',
+    password='tues10!tues',
+    host='hacktuesx.mysql.database.azure.com',
+    database="hacktuesx"
+)
+
+cursor = cnx.cursor()
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
 
@@ -95,25 +104,15 @@ def quiz(quiz):
 
 
 def get_user(username, password):
-    conn = mysql.connector.connect(
-        host="localhost",
-        user="user_validator",
-        password="user_validator_password",
-        database="user-database"
-    )
 
-    cursor = conn.cursor()
-
-    cursor.execute("select * from User where username = %s", (username,))
+    cursor.execute("select * from Users where user_validator = %s", (username,))
     user = cursor.fetchone()
 
     print(user)
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
-        conn.close()
         return user
 
-    conn.close()
     return None
 
 
@@ -145,3 +144,4 @@ def submit_quiz(quiz_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
+    cnx.close()
