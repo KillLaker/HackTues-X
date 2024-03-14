@@ -5,5 +5,5 @@ Werkzeug
 python-dotenv
 tika
 argon2-cffi
-jwt
+PyJWT
 tk

@@ -66,4 +66,4 @@ def generate_multiple_choice_questions():
     #     print("Right answer:", question["right_answer"])
     return questions
 
-generate_multiple_choice_questions()
+# generate_multiple_choice_questions()

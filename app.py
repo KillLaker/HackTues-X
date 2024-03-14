@@ -10,6 +10,7 @@ from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 # from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
+from convert_files_to_txt import *
 
 import os
 
@@ -37,7 +38,11 @@ def get_uploaded_file():
 
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
 
-    generate_multiple_choice_questions()
+    text = convert_file_to_text(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
+
+    with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
+        f.write(text)
+    # generate_multiple_choice_questions()
     return redirect(url_for('home'))
 
 
