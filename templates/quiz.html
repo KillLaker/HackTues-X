@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "../static/styles/quiz.css">
+        <link rel="stylesheet" href="../static/styles/quiz.css">
         <title>Quiz {{ quiz.id }}</title>
     </head>
     <body>
@@ -13,14 +13,16 @@
                 {% for question in quiz.questions %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
                         <h2>{{ question.question }}</h2>
-                            {% for option in question.options %}
-                                <div class="options">
-                                    <input type = "radio" name = "question_{{ question.id }}" value = "{{ option.id }}">
-                                    <label>{{ option }}</label>
-                                </div>
-                                <br>
-                            {% endfor %}
-                        </div>
+                        {% set ns = namespace(counter=0) %}
+                        {% for option in question.options %}
+                            <div class="options">
+                                <input type = "radio" name = "question_{{ question.id }}" value = "{{ 'ABCD'[ns.counter] }}" required>
+                                <label>{{ option }}</label>
+                            </div>
+                            <br>
+                            {% set ns.counter = ns.counter + 1 %}
+                        {% endfor %}
+                    </div>
                 {% endfor %}
 
                 <input class="button-poligon" type="submit" value="Submit">
