@@ -1,1 +1,32 @@
-HELLO WORLD!
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "../static/styles/style.css">
+    </head>
+    <body>
+        <div id = "form-div">
+            <form method = "post" enctype="multipart/form-data" action = "/upload">
+                <input type = "file" id = "file-field" name = "uploaded-file">
+                <label for = "file-field" id = "file-field-label">
+                    Import text file
+                </label>
+                <br>
+                <div id = "chosen-file">
+                    <span>Chosen file: </span>
+                    <span id = "chosen-file-name">None</span>
+                </div>
+
+                <br>
+                <input type = "submit" id = "submit-field">
+                <label for = "submit-field" id = "submit-field-label">Submit</label>
+            </form>
+        </div>
+        <script>
+            let inputFile = document.getElementById('file-field');
+            let fileNameField = document.getElementById('chosen-file-name');
+            inputFile.addEventListener('change', event => {
+                fileNameField.textContent = event.target.files[0].name
+            })
+        </script>
+    </body>
+</html>
