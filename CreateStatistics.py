@@ -8,16 +8,30 @@ import correct_answers as c_a
 import os
 
 
-def answers_fidelity(correctAnswersCount, IncorrectAnswersCount, save_path):
-    labels = 'Correct', 'Incorrect'
-    sizes = np.array([correctAnswersCount, IncorrectAnswersCount])
+def answers_fidelity(correctAnswersCount, IncorrectAnswersCount, save_path, i):
+    # Filter out zero values
+    if correctAnswersCount == 0:
+        sizes = np.array([IncorrectAnswersCount])
+        labels = ['Incorrect']
+    elif IncorrectAnswersCount == 0:
+        sizes = np.array([correctAnswersCount])
+        labels = ['Correct']
+    else:
+        sizes = np.array([correctAnswersCount, IncorrectAnswersCount])
+        labels = ['Correct', 'Incorrect']
+
     fig, ax = plt.subplots()
-    ax.pie(sizes, labels=labels, autopct='%1.1f')
-    ax = plt.savefig(save_path)
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
+    plt.title(f"Answers Fidelity {i + 1}")
+
+    # Save the plot
+    plt.savefig(save_path)
     plt.close()
 
-def statistics(inputData, save_path):
-    plt.hist(inputData, bins=len(inputData)*2)
+def statistics(inputData, save_path, i):
+    plt.suptitle(f'Question {i + 1}', fontsize=18)
+    plt.hist(inputData, bins=len(inputData) * 2, alpha=0.7, edgecolor='black')
+    plt.yticks(np.arange(0, len(inputData) + 1, 1))
     plt.savefig(save_path)  # Save the histogram as a PNG file
     plt.close()
 
@@ -59,9 +73,9 @@ if __name__ == '__main__':
 
         save_path_statistics = save_statistics_directory + f'statistic_{i}.png'
         #os.remove(save_path_statistics)
-        statistics(question_answers, save_path_statistics)
+        statistics(question_answers, save_path_statistics, i)
         save_path_diagrams = save_diagrams_directory + f'diagrams_{i}.png'
         #os.remove(save_path_diagrams)
-        answers_fidelity(correct_count, incorrect_count, save_path_diagrams)
+        answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i)
 
     print("Histograms saved successfully!")
