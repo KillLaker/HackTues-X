@@ -1,5 +1,30 @@
-readline връща стринг, който има '\0' накрая (да не се забравя да се добави един бит повече на заделената памет)
+version: "2"
 
-null-terminated pointer от pointer-и (масивът, който tokenize връща)
+services:
+	rabbitmq:
+		build:
+			context: .
+			dockerfile: Dockerfile.rabbitmq
 
-execvp - препоръчително
+		port:
+			- "15672:15672"
+			- "5672:5672"
+
+		networks:
+			- app-network
+
+	database:
+		build:
+			context: .
+			dockerfile: Dockerfile.mysql
+
+		port:
+			- "3306:3306"
+
+		restart:
+			- always
+
+		volumes:
+			- mysql_database: /var/bin/mysql
+
+	producer:

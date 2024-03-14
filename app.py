@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 import os
 import mysql.connector
 import argon2
@@ -10,6 +10,7 @@ from openaiApi import generate_multiple_choice_questions
 # from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
 import os
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
@@ -20,24 +21,35 @@ def home():
 
 @app.route("/upload", methods=['POST'])
 def get_uploaded_file():
-    uploaded_file = request.files['uploaded-file']
+    try:
+        if 'token' not in session:
+            return "<h1>User not logged in!</h1>"
 
-    if 'uploaded-file' not in request.files:
-        return render_template('error_uploading.html')
+        token = session['token']
+        json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
 
-    if len(uploaded_file.filename) == 0:
-        return render_template('error_uploading.html')
+        if json_token['permission'] != 1:
+            return "<h1>Unauthorized access!</h1>"
 
-    app.config['UPLOAD_FOLDER'] = './static/uploads/'
+        uploaded_file = request.files['uploaded-file']
+
+        if 'uploaded-file' not in request.files:
+            return render_template('error_uploading.html')
+
+        if len(uploaded_file.filename) == 0:
+            return render_template('error_uploading.html')
+
+        app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
 
-    filename = secure_filename(uploaded_file.filename)
+        filename = secure_filename(uploaded_file.filename)
 
-    uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
+        uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
 
-    generate_multiple_choice_questions()
-    return redirect(url_for('home'))
-
+        generate_multiple_choice_questions()
+        return redirect(url_for('home'))
+    except jwt.exceptions.ExpiredSignatureError:
+        return "<h1>Expired session!</h1>"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -47,12 +59,19 @@ def login():
 
             print(user)
 
-            token = generate_token(user[0])
-            return jsonify({'token': jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')}), 200
+            token = generate_token(user[0], user[3])
+            # jsonify({'token': jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')})
+
+            session['token'] = token
+
+            return "<h1>Successfully logged in.</h1>"
+
         except argon2.exceptions.VerifyMismatchError:
             return jsonify({"message": "Invalid username or password"}), 401
     else:
         return render_template("login.html")
+
+
 @app.route("/quiz/<int:quiz>")
 def quiz(quiz):
 
@@ -115,11 +134,13 @@ def get_user(username, password):
     return None
 
 
-def generate_token(id):
+def generate_token(id, permission):
     payload = {
         "id": id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        "permission": permission,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=0.016)
     }
+
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
 

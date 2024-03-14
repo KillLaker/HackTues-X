@@ -1,10 +1,10 @@
 flask
-mysql-connector-python 
+mysql-connector-python
 openai
 Werkzeug
 python-dotenv
 tika
 argon2-cffi
-jwt
-os
-tkinter
+PyJWT
+tk
+requests
