@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
+from openaiApi import generate_multiple_choice_questions
 
 from werkzeug.utils import secure_filename
 
@@ -25,7 +26,7 @@ def get_uploaded_file():
 
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
 
-
+    generate_multiple_choice_questions()
     return redirect(url_for('home'))
 
 @app.route('/login', methods=['GET', 'POST'])
