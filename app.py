@@ -68,16 +68,13 @@ def get_uploaded_file():
     # create_quiz(quiz)
     get_all_quizzes()
 
-
     filename = secure_filename(uploaded_file.filename)
-
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
-
     text = convert_file_to_text(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
 
     with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
         f.write(text)
-    # generate_multiple_choice_questions()
+
     return redirect(url_for('home'))
 
 
@@ -140,6 +137,15 @@ def get_all_quizzes():
     print(quizzes)
     cursor.close()
 
+def get_tables():
+    cursor = cnx.cursor()
+    cursor.execute("SHOW TABLES")
+    tables = cursor.fetchall()
+    print(tables)
+    cursor.close()
+
+get_tables()
+
 def create_quiz(quiz):
     cursor = cnx.cursor()
 
@@ -196,6 +202,8 @@ def submit_quiz(quiz_id):
     with open(filename, 'w') as f:
         f.write(post_request_text)
     return 'Quiz submitted! Answers saved in ' + filename
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
