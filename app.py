@@ -28,6 +28,12 @@ def get_uploaded_file():
 
     return redirect(url_for('home'))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
