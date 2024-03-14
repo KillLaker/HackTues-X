@@ -4,6 +4,9 @@ import mysql.connector
 import argon2
 import jwt
 import datetime
+from openaiApi import generate_multiple_choice_questions
+# from convert_files_to_txt import convert_to_txt
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
@@ -11,7 +14,6 @@ app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871'
 @app.route("/", methods=['GET'])
 def home():
     return render_template('index.html')
-
 
 @app.route("/upload", methods=['POST'])
 def get_uploaded_file():
@@ -24,9 +26,10 @@ def get_uploaded_file():
         return render_template('error_uploading.html')
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
-
+    # convert_to_txt(uploaded_file)
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
 
+    generate_multiple_choice_questions()
     return redirect(url_for('home'))
 
 
@@ -44,6 +47,43 @@ def login():
             return jsonify({"message": "Invalid username or password"}), 401
     else:
         return render_template("login.html")
+@app.route("/quiz/<int:quiz>")
+def quiz(quiz):
+
+    # Read the data from the database 
+
+    quiz = {
+        "id": quiz,
+        "title": "Quiz 1",
+        "questions": [
+            {
+                "id": 1,
+                "question": "What is the capital of France?",
+                "options": ["Paris", "London", "Berlin", "Madrid"],
+                "correct": "Paris"
+            },
+            {
+                "id": 2,
+                "question": "What is the capital of Germany?",
+                "options": ["Paris", "London", "Berlin", "Madrid"],
+                "correct": "Berlin"
+            },
+            {
+                "id": 3,
+                "question": "What is the capital of Spain?",
+                "options": ["Paris", "London", "Berlin", "Madrid"],
+                "correct": "Madrid"
+            },
+            {
+                "id": 4,
+                "question": "What is the capital of United Kingdom?",
+                "options": ["Paris", "London", "Berlin", "Madrid"],
+                "correct": "London"
+            }
+        ]
+    }
+
+    return render_template('quiz.html', quiz=quiz)
 
 
 def get_user(username, password):

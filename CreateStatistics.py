@@ -1,40 +1,67 @@
 import matplotlib.pyplot as plt
 from tkinter import *
-import student_answers as s_a
 
+import numpy as np
+
+import student_answers as s_a
+import correct_answers as c_a
+import os
+
+
+def answers_fidelity(correctAnswersCount, IncorrectAnswersCount, save_path):
+    labels = 'Correct', 'Incorrect'
+    sizes = np.array([correctAnswersCount, IncorrectAnswersCount])
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct='%1.1f')
+    ax = plt.savefig(save_path)
+    plt.close()
 
 def statistics(inputData, save_path):
     plt.hist(inputData, bins=len(inputData)*2)
-    plt.savefig(save_path)  # Save the histogram as PNG file
+    plt.savefig(save_path)  # Save the histogram as a PNG file
     plt.close()
 
+def check_question_answers(question_answers, correct_answers):
+    correct = 0
+    incorrect = 0
+    print(correct_answers)
+    for correct_answer in correct_answers:
+        for student_answer in question_answers:
+            if student_answer == correct_answer:
+                correct += 1
+            else:
+                incorrect += 1
+    return correct, incorrect
 
 if __name__ == '__main__':
-    # the page which is opened when running the program
     root = Tk()
     root.title("Test statistics")
     root.iconbitmap('D:/statistics.png')
     root.geometry('800x400')
 
     # Save directory for the statistics
-    save_directory = 'D:/HackTues-X/Statistics/'
+    save_statistics_directory = 'D:/HackTues-X/Statistics/'
+
+    save_diagrams_directory = 'D:/HackTues-X/Diagrams/'
 
     # Specify the directory containing student answer files
     answer_directory = 'D:/HackTues-X/Student_answers'
 
+    # Read student answers and correct answers
     answers = s_a.get_student_answers(answer_directory)
+    correct_answers = c_a.read_correct_answers(answer_directory)
 
-    # Iterate over each row in the 2D array
-    questions = [[] for _ in range(5)]  # 5 is the number of questions
-    for row in answers:
-        for col_index, element in enumerate(row):
-            questions[col_index].append(element)
-            #print(questions[col_index])
+    # Iterate over each question
+    for i, question_answers in enumerate(zip(*answers)):
+        correct_count, incorrect_count = check_question_answers(question_answers, correct_answers[i])
+        #print(f"Question {i+1}: Correct: {correct_count}, Incorrect: {incorrect_count}")
 
 
-    for i, question in enumerate(questions):
-        print(question)
-        save_path = save_directory + f'statistic_{i}.png'
-        statistics(question, save_path)
+        save_path_statistics = save_statistics_directory + f'statistic_{i}.png'
+        #os.remove(save_path_statistics)
+        statistics(question_answers, save_path_statistics)
+        save_path_diagrams = save_diagrams_directory + f'diagrams_{i}.png'
+        #os.remove(save_path_diagrams)
+        answers_fidelity(correct_count, incorrect_count, save_path_diagrams)
 
     print("Histograms saved successfully!")

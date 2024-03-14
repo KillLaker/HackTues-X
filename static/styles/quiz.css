@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; flex-direction: column; color: white;background: rgb(64,26,74);background: linear-gradient(90deg, rgba(64,26,74,1) 0%, rgba(2,0,36,1) 50%, rgba(65,20,77,1) 100%);}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
+input[type=number] {-moz-appearance: textfield;}
+input:focus{outline: none;}
+.w-50{width: 50%;}
+.w-70{width: 70%;}
+.px-20{padding: 20px;}
+.text-left{text-align: left;}
+.text-center{text-align: center;}
+.left{ float: left; }
+.mx-20{margin: 20px 0;}
+.p-53015{padding: 5px 30px 15px;}
+   
+input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--form-background);
+    margin: 0;
+  
+    font: inherit;
+    color: white;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid white;
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+  
+    display: grid;
+    place-content: center;
+  }
+  
+  input[type="radio"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--form-control-color);
+    background-color: white;
+  }
+  
+  input[type="radio"]:checked::before {
+    transform: scale(1);
+  }
+  
+  input[type="radio"]:focus {
+    outline: max(2px, 0.15em) solid white;
+    outline-offset: max(2px, 0.15em);
+  }
+
+.main-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.quiz-bubble{
+    background-color: #5712905a;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+}
+.button-poligon {
+    text-transform: uppercase;
+    height: 50px;
+    width: 250px;
+    font-size: large;
+    -webkit-clip-path: polygon(17px 0,calc(100% - 17px) 0,100% 50%,calc(100% - 17px) 100%,17px 100%,0 50%);
+    clip-path: polygon(17px 0,calc(100% - 17px) 0,100% 50%,calc(100% - 17px) 100%,17px 100%,0 50%);
+    background: #571290;
+    box-shadow: 0px 5px 50px black;
+    transition: 0.2s linear;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+.button-poligon:hover {
+    background: #742cb8;
+    transition: 0.2s linear;
+}
+.options{
+    display: flex;
+    font-size: 15px;
+    margin-left: 10px;
+}
+.options label{
+    margin-left: 10px;
+    margin-top: -2px;
+}
