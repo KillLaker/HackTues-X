@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
 from openaiApi import generate_multiple_choice_questions
+# from convert_files_to_txt import convert_to_txt
 from werkzeug.utils import secure_filename
 import os
 
@@ -21,7 +22,7 @@ def get_uploaded_file():
         return render_template('error_uploading.html')
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
-
+    # convert_to_txt(uploaded_file)
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'))
 
     generate_multiple_choice_questions()
