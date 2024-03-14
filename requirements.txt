@@ -6,5 +6,4 @@ python-dotenv
 tika
 argon2-cffi
 jwt
-os
-tkinter
+tk
