@@ -234,14 +234,20 @@ def submit_quiz(quiz_id):
             if value:
                 selected_options.append(value)
 
-    post_request_text = '\n'.join(selected_options) # Answers only letters
+    post_request_text = '\n'.join(selected_options)
 
-    filename = f'D:/HackTues-X/Student_answers/student_{quiz_id}.txt'
+    try:
+        token = session['token']
+        json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+        student_id = json_token_student['student_id']
+        print(student_id)
+    except jwt.exceptions.ExpiredSignatureError:
+        return "<h1>Expired session!</h1>"
+    
+    filename = f'{quiz_id}_{student_id}.txt'
     with open(filename, 'w') as f:
         f.write(post_request_text)
     return 'Quiz submitted! Answers saved in ' + filename
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

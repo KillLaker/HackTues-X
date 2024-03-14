@@ -66,4 +66,10 @@ def generate_multiple_choice_questions():
     #     print("Question:", question["question"])
     #     print("Answers:", question["answers"])
     #     print("Right answer:", question["right_answer"])
+<<<<<<< HEAD
     return questions
+
+
+=======
+    return questions
+>>>>>>> 22f291ae9d0be2cd2ce0bc4795826d9e890385c8
