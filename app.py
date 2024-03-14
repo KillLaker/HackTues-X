@@ -30,7 +30,7 @@ def get_uploaded_file():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
+        pass
     else:
         return render_template("login.html")
 @app.route("/quiz/<int:quiz>")
