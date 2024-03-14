@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet" href = "../static/styles/quiz.css">
+        <title>Quiz {{ quiz.id }}</title>
+    </head>
+    <body>
+        <div class="main-page">
+            <div class="quiz-bubble w-50">
+                <h1>{{ quiz.title }}</h1>
+            </div>
+            <form class="w-70" action = "/quiz/{{ quiz.id }}/submit" method = "post">
+                {% for question in quiz.questions %}
+                    <div class="quiz-bubble">
+                        <h2>{{ question.question }}</h2>
+                            {% for option in question.options %}
+                                <div class="left">
+                                    <input type = "radio" name = "question_{{ question.id }}" value = "{{ option.id }}">
+                                    <label>{{ option }}</label>
+                                </div>
+                                    <br>
+                            {% endfor %}
+                        </div>
+                {% endfor %}
+
+                <input type = "submit" value = "Submit">
+            </form>
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>
