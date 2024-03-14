@@ -52,7 +52,7 @@ def login():
 def get_user(username, password):
     cursor = cnx.cursor()
 
-    cursor.execute("select * from Users where user_validator = %s", (username,))
+    cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
     print(user)
 

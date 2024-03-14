@@ -1,11 +1,12 @@
-user id: 12
-t
-i
----
-user id: 23
-m
-a
-j
-k
-a
----
+12
+D
+C
+B
+B
+A
+23
+A
+B
+C
+D
+A
