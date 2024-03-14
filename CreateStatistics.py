@@ -50,32 +50,36 @@ def check_question_answers(question_answers, correct_answers):
 if __name__ == '__main__':
     root = Tk()
     root.title("Test statistics")
-    root.iconbitmap('D:/statistics.png')
+    root.iconbitmap('statistics.png')
     root.geometry('800x400')
 
     # Save directory for the statistics
-    save_statistics_directory = 'D:/HackTues-X/Statistics/'
+    save_statistics_directory = 'Statistics'
 
-    save_diagrams_directory = 'D:/HackTues-X/Diagrams/'
+    save_diagrams_directory = '/Diagrams'
 
     # Specify the directory containing student answer files
-    answer_directory = 'D:/HackTues-X/Student_answers'
+    answer_directory = '/Student_answers'
 
     # Read student answers and correct answers
     answers = s_a.get_student_answers(answer_directory)
     correct_answers = c_a.read_correct_answers(answer_directory)
 
+    #print(answers)
+
+
+
     # Iterate over each question
     for i, question_answers in enumerate(zip(*answers)):
+
         correct_count, incorrect_count = check_question_answers(question_answers, correct_answers[i])
-        #print(f"Question {i+1}: Correct: {correct_count}, Incorrect: {incorrect_count}")
+        print(f"Question {i+1}: Correct: {correct_count}, Incorrect: {incorrect_count}")
 
 
-        save_path_statistics = save_statistics_directory + f'statistic_{i}.png'
-        #os.remove(save_path_statistics)
+        save_path_statistics = os.path.dirname(__file__) + f'/Statistics/statistic_{i}.png'
         statistics(question_answers, save_path_statistics, i)
-        save_path_diagrams = save_diagrams_directory + f'diagrams_{i}.png'
-        #os.remove(save_path_diagrams)
-        answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i)
 
+        save_path_diagrams = os.path.dirname(__file__) + f'/Diagrams/diagrams_{i}.png'
+
+        answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i)
     print("Histograms saved successfully!")
