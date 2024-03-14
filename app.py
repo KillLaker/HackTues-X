@@ -249,7 +249,7 @@ def submit_quiz(quiz_id):
 
     post_request_text = '\n'.join(selected_options) # Answers only letters
 
-    filename = f'D:/HackTues-X/Student_answers/student_{quiz_id}.txt'
+    filename = f'Student_answers/student_{quiz_id}.txt'
     with open(filename, 'w') as f:
         f.write(post_request_text)
     return 'Quiz submitted! Answers saved in ' + filename
