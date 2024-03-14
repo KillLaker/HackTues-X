@@ -10,19 +10,18 @@ from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 from werkzeug.utils import secure_filename
 from convert_files_to_txt import *
+from dotenv import load_dotenv
 
-# TODO fix imports
-
-# ! move the sensitive data to .env file
+load_dotenv()
 cnx = mysql.connector.connect(
-    user='hacktuesx',
-    password='tues10!tues',
-    host='hacktuesx.mysql.database.azure.com',
-    database="hacktuesx"
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    host=os.getenv('DB_HOST'),
+    database=os.getenv('DB_NAME')
 )
-
+ 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871' #! os.getenv("SECRET_KEY")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.route("/", methods=['GET'])
 def home():
