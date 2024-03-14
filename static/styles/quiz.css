@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; flex-direction: column; color: white;background: rgb(64,26,74);background: linear-gradient(90deg, rgba(64,26,74,1) 0%, rgba(2,0,36,1) 50%, rgba(65,20,77,1) 100%);}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
+input[type=number] {-moz-appearance: textfield;}
+input:focus{outline: none;}
+.w-50{width: 50%;}
+.w-70{width: 70%;}
+.text-left{text-align: left;}
+.left{ float: left; }
+
+.main-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.quiz-bubble{
+    background-color: #5712905a;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    text-align: center;
+}

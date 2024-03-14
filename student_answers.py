@@ -5,21 +5,19 @@ def count_files(directory):
     num_files = len(files)
     return num_files
 
+import os
+
 def get_student_answers(directory):
     os.chdir(directory)
-    rows = count_files(directory) - 1
-    cols = 5
-    student_indx = 0
-    answers = [[0 for _ in range(cols)] for _ in range(rows)]
+    rows = sum(1 for filename in os.listdir(directory) if os.path.isfile(os.path.join(directory, filename)) and filename != "correct_answers.txt")
+    answers = []
     for filename in os.listdir(directory):
-        # Skip directories
-        if os.path.isdir(os.path.join(directory, filename)):
+        if os.path.isdir(os.path.join(directory, filename)) or filename == "correct_answers.txt":
             continue
-        if filename == "student_answers.py":
-            continue
+        student_answers = []
         with open(os.path.join(directory, filename), 'r') as f:
-            for i, line in enumerate(f):
-                answers[student_indx][i] = line.strip()
-            student_indx += 1
-
+            for line in f:
+                student_answers.append(line.strip())
+        answers.append(student_answers)
     return answers
+
