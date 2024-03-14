@@ -8,3 +8,5 @@ argon2-cffi
 PyJWT
 tk
 requests
+numpy
+matplotlib

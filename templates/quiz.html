@@ -2,22 +2,22 @@
 <html>
     <head>
         <link rel="stylesheet" href="../static/styles/quiz.css">
-        <title>Quiz {{ quiz.id }}</title>
+        <title>Quiz</title>
     </head>
     <body>
         <div class="main-page">
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
-                <h1>{{ quiz.title }}</h1>
+                <h1>Quiz</h1>
             </div>
-            <form class="w-70 text-center" action = "/quiz/{{ quiz.id }}/submit" method = "post">
-                {% for question in quiz.questions %}
+            <form class="w-70 text-center" action = "/quiz/submit" method = "post">
+                {% for question in quiz %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
                         <h2>{{ question.question }}</h2>
                         {% set ns = namespace(counter=0) %}
-                        {% for option in question.options %}
+                        {% for answer in question.answers %}
                             <div class="options">
-                                <input type = "radio" name = "question_{{ question.id }}" value = "{{ 'ABCD'[ns.counter] }}" required>
-                                <label>{{ option }}</label>
+                                <input type = "radio" name = "question_{{ loop.index }}" value = "{{ 'ABCD'[ns.counter] }}" required>
+                                <label>{{ answer }}</label>
                             </div>
                             <br>
                             {% set ns.counter = ns.counter + 1 %}

@@ -10,19 +10,18 @@ from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 from werkzeug.utils import secure_filename
 from convert_files_to_txt import *
+from dotenv import load_dotenv
 
-# TODO fix imports
-
-# ! move the sensitive data to .env file
+load_dotenv()
 cnx = mysql.connector.connect(
-    user='hacktuesx',
-    password='tues10!tues',
-    host='hacktuesx.mysql.database.azure.com',
-    database="hacktuesx"
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    host=os.getenv('DB_HOST'),
+    database=os.getenv('DB_NAME')
 )
-
+ 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'jagdhsflkuaysdfo718349871' #! os.getenv("SECRET_KEY")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.route("/", methods=['GET'])
 def home():
@@ -39,7 +38,7 @@ def login():
             user = get_user(request.form['username-field'], request.form['password-field'])
             token = generate_token(user[0], user[3])
             session['token'] = token
-            return "<h1>Successfully logged in.</h1>"
+            return redirect(url_for('profile'))
 
         except argon2.exceptions.VerifyMismatchError:
             return jsonify({"message": "Invalid username or password"}), 401
@@ -53,7 +52,7 @@ def login():
 def get_user(username, password):
     cursor = cnx.cursor()
 
-    cursor.execute("select * from Users where user_validator = %s", (username,))
+    cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
     print(user)
 
@@ -88,7 +87,7 @@ def get_uploaded_file():
 
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
-        student_id = json_token['student_id']
+        student_id = json_token['id']
         print(student_id)
 
         if json_token['permission'] != 1:
@@ -107,6 +106,7 @@ def get_uploaded_file():
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
+    #! Uncomment when ready
     #! quiz = generate_multiple_choice_questions()
 
     quiz = [
@@ -218,6 +218,8 @@ def get_quizzes_by_user(user_id):
 @app.route("/quiz/<int:quiz_id>")
 def quiz(quiz_id):
     quiz = get_quiz(quiz_id)
+    if quiz is None:
+        return "Quiz not found", 404
     return render_template('quiz.html', quiz=quiz)
 
 # --------------------------------------------- #
@@ -239,7 +241,7 @@ def submit_quiz(quiz_id):
     try:
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
-        student_id = json_token_student['student_id']
+        student_id = json_token_student['id']
         print(student_id)
     except jwt.exceptions.ExpiredSignatureError:
         return "<h1>Expired session!</h1>"
@@ -248,6 +250,26 @@ def submit_quiz(quiz_id):
     with open(filename, 'w') as f:
         f.write(post_request_text)
     return 'Quiz submitted! Answers saved in ' + filename
+
+
+# --------------------------------------------- #
+#  My profile page where quizzes are displayed  #
+# --------------------------------------------- #
+
+
+@app.route('/profile')
+def profile():
+    if 'token' not in session:
+        return redirect(url_for('login'))
+    
+    token = session['token']
+    json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+    user_id = json_token['id']
+    quizzes = get_quizzes_by_user(user_id)
+
+    #? IF there is time implement different messages 
+
+    return render_template('profile.html', quizzes=quizzes)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
