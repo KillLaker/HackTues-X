@@ -46,16 +46,18 @@ def get_uploaded_file():
 
         if json_token['permission'] != 1:
             return "<h1>Unauthorized access!</h1>"
+    except jwt.exceptions.ExpiredSignatureError:
+        return "<h1>Expired session!</h1>"
+        
+    uploaded_file = request.files['uploaded-file']
 
-        uploaded_file = request.files['uploaded-file']
+    if 'uploaded-file' not in request.files:
+        return render_template('error_uploading.html')
 
-        if 'uploaded-file' not in request.files:
-            return render_template('error_uploading.html')
+    if len(uploaded_file.filename) == 0:
+        return render_template('error_uploading.html')
 
-        if len(uploaded_file.filename) == 0:
-            return render_template('error_uploading.html')
-
-        app.config['UPLOAD_FOLDER'] = './static/uploads/'
+    app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
     #! quiz = generate_multiple_choice_questions()
 
@@ -73,7 +75,7 @@ def get_uploaded_file():
     ]
 
 
-    # create_quiz(quiz)
+# create_quiz(quiz)
     get_all_quizzes()
 
     filename = secure_filename(uploaded_file.filename)
@@ -83,10 +85,9 @@ def get_uploaded_file():
     with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
         f.write(text)
 
-        generate_multiple_choice_questions()
-        return redirect(url_for('home'))
-    except jwt.exceptions.ExpiredSignatureError:
-        return "<h1>Expired session!</h1>"
+    # generate_multiple_choice_questions()
+    return redirect(url_for('home'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,10 +105,6 @@ def login():
             return jsonify({"message": "Invalid username or password"}), 401
     else:
         return render_template("login.html")
-
-
-@app.route("/quiz/<int:quiz>")
-def quiz(quiz):
 
 @app.route("/quiz/<int:quiz_id>")
 def quiz(quiz_id):
