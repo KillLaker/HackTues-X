@@ -84,7 +84,7 @@ def get_user(username, password):
 
     cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
-    print(user)
+    # print(user)
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
         return user
@@ -133,7 +133,7 @@ def get_uploaded_file():
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         student_id = json_token['id']
-        print(student_id)
+        # print(student_id)
 
         if json_token['permission'] != 1:
             return "<h1>Unauthorized access!</h1>"
@@ -305,7 +305,7 @@ def submit_quiz(quiz_id):
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         student_id = json_token_student['id']
-        print(student_id)
+        # print(student_id)
     except jwt.exceptions.ExpiredSignatureError:
         return "<h1>Expired session!</h1>"
     
@@ -323,9 +323,9 @@ def submit_quiz(quiz_id):
     correct_answers_full = [q['right_answer'] for q in quiz]
     correct_answers = [answer[0].upper() for answer in correct_answers_full]
 
-    print(selected_options, correct_answers)
+    # print(selected_options, correct_answers)
     num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
-    print(num_correct)
+    # print(num_correct)
 
     return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options), selected_options=selected_options, correct_options=correct_answers, is_logged_in=session.get('token', False))
 
@@ -345,11 +345,7 @@ def profile():
         user_id = json_token['id']
         quizzes = get_quizzes_by_user(user_id)
 
-        # ? IF there is time implement different messages
-
-        print(quizzes)
-
-        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False))
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1)
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))

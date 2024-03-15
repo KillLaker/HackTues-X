@@ -21,7 +21,12 @@
     </div>
     <div class="main-content">
         <h1 class="main-title">Hello, {{ username }}</h1>
+        {% if teacher %}
         <a href='/' class="create-quiz-btn">Create new quiz</a>
+        {% else %}
+        <p>You have to be a teacher to create a quiz.</p>
+        {% endif %}
+
         <div class="buttons">
         {% for quiz in quizzes %}
             <div class="quiz-buttons">
