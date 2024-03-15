@@ -43,40 +43,27 @@ def check_question_answers(question_answers, correct_answers):
         else:
             incorrect += 1
     return correct, incorrect
-def create_diagram():
+
+def create_statistics(quiz_id):
     root = Tk()
     root.title("Test statistics")
     root.iconbitmap('statistics.png')
     root.geometry('800x400')
 
-    save_statistics_directory = 'Statistics'
-
-    save_diagrams_directory = '/Diagrams'
-
-    answer_directory = '/Student_answers/correct_answers'
-
-    #answers = s_a.get_student_answers(answer_directory)
+    answer_directory = f'/Student_answers/correct_answers/{quiz_id}_correct_answers'
     correct_answers = c_a.read_correct_answers(answer_directory)
-    #print('corrrr', correct_answers)
 
-
-    student_answers = s_a.get_student_answers('Student_answers')
+    student_answers = s_a.get_student_answers('Student_answers', quiz_id)
     for i, (student_id, answers) in enumerate(student_answers, start=1):
         save_path_statistics = os.path.dirname(__file__) + f'/Statistics/statistic_{i}.png'
         statistics(answers, save_path_statistics, i)
         correct_count, incorrect_count = check_question_answers(answers, correct_answers)
         save_path_diagrams = os.path.dirname(__file__) + f'/Diagrams/diagrams_{student_id}.png'
-        print('aaa', correct_count, incorrect_count)
+        print(correct_count, incorrect_count)
         answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i, student_id)
 
-    # for i, question_answers in enumerate(zip(*answers)):
-    #
-    #     correct_count, incorrect_count = check_question_answers(question_answers, correct_answers[i])
-    #     print(f"Question {i+1}: Correct: {correct_count}, Incorrect: {incorrect_count}")
-    #
-    #     statistics(question_answers, save_path_statistics, i)
-    #
-    #
-    #
-    #
     print("Histograms saved successfully!")
+
+    root.mainloop()
+    root.destroy()
+

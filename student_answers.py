@@ -6,10 +6,11 @@ def count_files(directory):
     num_files = len(files)
     return num_files
 
-def get_student_answers(directory):
+def get_student_answers(directory, quiz_id):
     current_directory = os.path.join(os.path.dirname(__file__), directory)
     answers_2d_array = []
-    filename = '01_combined.txt'
+    filename = f'{quiz_id}_combined.txt'
+    print(filename, quiz_id)
     with open(os.path.join(current_directory, filename), 'r') as file:
         first_line = file.readline().strip()
         student_id_match = re.match(r'\d+', first_line)
@@ -41,6 +42,7 @@ def combine_student_answers(directory):
 
     for quiz_id, files in quiz_files.items():
         combined_filename = f'{quiz_id}_combined.txt'
+        print(combined_filename, quiz_id)
         with open(os.path.join(directory, combined_filename), 'w') as combined_file:
             for filename in files:
                 if((filename.split('_')[1].split('.')[0]).isdigit()):
@@ -53,7 +55,7 @@ def combine_student_answers(directory):
 combine_student_answers('Student_answers/')
 
 file_path = "Student_answers"
-answers_2d_array = get_student_answers(file_path)
+answers_2d_array = get_student_answers(file_path, quiz_id=1)
 print(answers_2d_array)
 #for i, (student_id, answers) in enumerate(answers_2d_array, start=1):
     #print(f"Student {student_id} answers: {answers}")

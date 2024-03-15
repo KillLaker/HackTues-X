@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagram Viewer</title>
 <style>
-
+    /* CSS styles for diagram container and arrows */
     .diagram-container {
         position: relative;
-        width: 600px;
+        width: 600px; /* Adjust width as needed */
         margin: 0 auto;
     }
 
@@ -17,7 +17,6 @@
         max-width: 100%;
         height: auto;
     }
-
 
     .arrow {
         position: absolute;
@@ -59,10 +58,13 @@
 </head>
 <body>
 <div class="diagram-container">
-    <img src="diagram1.jpg" class="diagram-img" alt="Diagram 1">
+    {% for i in range(1, 26) %}
+    <img src="diagram{{i}}.png" class="diagram-img" alt="Diagram {{ i }}" style="{% if i != 1 %} display: none; {% endif %}">
+    {% endfor %}
+    <!-- Arrows for navigation -->
     <div class="arrow left" onclick="navigate(-1)"></div>
     <div class="arrow right" onclick="navigate(1)"></div>
-</div>
+
 <script>
     // JavaScript for navigation
     let currentDiagramIndex = 0;
@@ -81,5 +83,6 @@
         diagrams[currentDiagramIndex].style.display = 'block';
     }
 </script>
+</div>
 </body>
 </html>

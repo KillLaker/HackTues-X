@@ -6,6 +6,8 @@ import jwt
 import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
+
+import CreateStatistics
 from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 from werkzeug.utils import secure_filename
@@ -31,7 +33,7 @@ def home():
             flash("Either no account detected or session expired!")
             return redirect(url_for('login'))
 
-        return render_template('index.html')
+        return render_template('index.html', is_logged_in=session.get('token', False))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
@@ -201,7 +203,7 @@ def insert_quiz(quiz, owner_id):
 
         for j, a in enumerate(q['answers']):
             is_correct = (a[0].upper() == q['right_answer'].upper())
-            print("IsCorrect: ", is_correct, "\n Answer: ", a, "\n Right Answer: ", q['right_answer'])
+            # print("IsCorrect: ", is_correct, "\n Answer: ", a, "\n Right Answer: ", q['right_answer'])
             cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)", (question_id, a, is_correct))
     write_correct_answers(quiz_id, quiz)
     cnx.commit()
@@ -271,11 +273,18 @@ def get_quizzes_by_user(user_id):
 
 @app.route("/quiz/<int:quiz_id>")
 def quiz(quiz_id):
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
+        return redirect(url_for('login'))
+    
     quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
-    print(quiz)
-    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id)
+    # print(quiz)
+    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
 #    Handles quiz submitting with generating a  #
@@ -292,6 +301,7 @@ def submit_quiz(quiz_id):
                 selected_options.append(value)
 
     post_request_text = '\n'.join(selected_options)
+
     try:
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
@@ -306,8 +316,19 @@ def submit_quiz(quiz_id):
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as f:
         f.write(post_request_text)
-    return 'Quiz submitted! Answers saved in ' + filename
 
+    quiz = get_quiz(quiz_id)
+    if quiz is None:
+        return "Quiz not found", 404
+    
+    correct_answers_full = [q['right_answer'] for q in quiz]
+    correct_answers = [answer[0].upper() for answer in correct_answers_full]
+
+    print(selected_options, correct_answers)
+    num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
+    print(num_correct)
+
+    return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options), selected_options=selected_options, correct_options=correct_answers, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
 #  My profile page where quizzes are displayed  #
@@ -329,10 +350,27 @@ def profile():
 
         print(quizzes)
 
-        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id))
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
+
+@app.route('/quiz/<int:quiz_id>/statistics')
+def get_statistics(quiz_id):
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
+        return redirect(url_for('login'))
+
+    diagrams_files = [f"../Diagrams/{file}" for file in os.listdir('Diagrams') if file.endswith('.png')]
+
+    statistics_files = [f"../Statistics/{file}" for file in os.listdir('Statistics') if file.endswith('.png')]
+
+    CreateStatistics.create_statistics(quiz_id)
+    return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
