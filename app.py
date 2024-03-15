@@ -39,6 +39,10 @@ def home():
         return redirect(url_for('login'))
 
 
+@app.route('/about', methods = ['GET'])
+def about():
+    return render_template('about.html', is_logged_in=session.get('token', False))
+
 # ----------------------------------- #
 #        Login returns jwt token      #
 # ----------------------------------- #
@@ -52,10 +56,12 @@ def login():
             session['token'] = token
             return redirect(url_for('profile'))
 
-        except argon2.exceptions.VerifyMismatchError:
-            return jsonify({"message": "Invalid username or password"}), 401
+        except (argon2.exceptions.VerifyMismatchError, TypeError):
+            return redirect(url_for('login', trigger_alert = True))
     else:
-        return render_template("login.html")
+        trigger_alert = request.args.get('trigger_alert', type=bool)
+
+        return render_template("login.html", trigger_alert = trigger_alert)
 
 
 @app.route('/logout', methods = ['GET'])
@@ -63,13 +69,13 @@ def logout():
     try:
         if 'token' not in session:
             flash("Either no account detected or session expired!")
-            return redirect(url_for('login'))
+            return redirect(url_for('login', trigger_alert = True))
 
         session.pop('token', None)
     except jwt.exceptions.ExpiredSignatureError:
-        flash("Either no account detected or session expired!")
+        pass
 
-    return redirect(url_for('login'))
+    return redirect(url_for('login', trigger_alert = True))
 
 # ----------------------------------- #
 #  Returns the user object in the DB  #
@@ -80,7 +86,7 @@ def get_user(username, password):
 
     cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
-    print(user)
+    # print(user)
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
         return user
@@ -129,7 +135,7 @@ def get_uploaded_file():
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         student_id = json_token['id']
-        print(student_id)
+        # print(student_id)
 
         if json_token['permission'] != 1:
             return "<h1>Unauthorized access!</h1>"
@@ -147,24 +153,9 @@ def get_uploaded_file():
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
-    #! Uncomment when ready
-    #! quiz = generate_multiple_choice_questions()
-
-    quiz = [
-        {'question': '1. What is authentication?', 'answers': ['A. The process of giving permission to access a specific resource', 'B. The act of validating that users are whom they claim to be', 'C. An authentication method that enables users to securely authenticate with multiple applications', 'D. The process of generating security codes via an outside party'], 'right_answer': 'B'}, 
-        {'question': '2. What is authorization?', 'answers': ['A. The act of validating that users are whom they claim to be', 'B. The process of giving permission to access a specific resource', 'C. An authentication method that enables users to securely authenticate with multiple applications', 'D. The process of generating security codes via an outside party'], 'right_answer': 'B'}, 
-        {'question': '3. What is the purpose of multi-factor authentication (MFA)?', 'answers': ['A. To grant access for only one session or transaction', 'B. To generate security codes via an outside party', 'C. To increase security beyond what passwords alone can provide', 'D. To present a fingerprint or eye scan to gain access'], 'right_answer': 'C'}, 
-        {'question': '4. Which protocol helps authenticate users and convey information about them?', 'answers': ['A. OAuth 2.0', 'B. OpenID Connect (OIDC)', 'C. SSO', 'D. Biometrics'], 'right_answer': 'B'}, 
-        {'question': '5. What does the OAuth 2.0 protocol control?', 'answers': ['A. Authentication', 'B. Authorization', 'C. Single sign-on', 'D. Multi-factor authentication'], 'right_answer': 'B'}, 
-        {'question': '6. What is the purpose of SSO?', 'answers': ['A. To grant permission to access a specific resource', 'B. To increase security beyond what passwords alone can provide', 'C. To securely authenticate with multiple applications by using one set of credentials', 'D. To validate that users are whom they claim to be'], 'right_answer': 'C'}, 
-        {'question': '7. What is the difference between authentication and authorization?', 'answers': ['A. Authentication confirms users are who they say they are, while authorization gives them permission to access a resource', 'B. Authentication gives permission to access a specific resource, while authorization validates user identities', 'C. Authentication and authorization are the same process', 'D. Authentication and authorization are not related to security'], 'right_answer': 'A'}, 
-        {'question': '8. Which method is commonly used for authentication?', 'answers': ['A. Biometrics', 'B. Retrieving and storing authentication information', 'C. Providing administrative access to an application', 'D. Providing permission to download a file on a server'], 'right_answer': 'A'}, 
-        {'question': '9. What should always come before authorization in system security?', 'answers': ['A. Multi-factor authentication', 'B. Biometrics', 'C. Authentication', 'D. OAuth 2.0 protocol'], 'right_answer': 'C'}, 
-        {'question': '10. How do authentication and authorization work together in a secure environment?', 'answers': ['A. Authentication and authorization are not related', 'B. Authorization is not necessary if authentication is successful', 'C. Users must prove their identities before being granted access to requested resources', 'D. Authorization is always granted before authentication'], 'right_answer': 'C'}
-    ]
-
-    # ! Uncomment when ready
-    # insert_quiz(quiz, student_id)
+    #! Uncomment when ready 
+    quiz = generate_multiple_choice_questions()
+    insert_quiz(quiz, student_id)
 
     filename = secure_filename(uploaded_file.filename)
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
@@ -173,7 +164,7 @@ def get_uploaded_file():
     with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
         f.write(text)
 
-    return redirect(url_for('home'))
+    return redirect(url_for('profile'))
 
 # ----------------------------------- #
 #     Inserts the quiz in the DB      #
@@ -270,10 +261,10 @@ def get_quizzes_by_user(user_id):
 def quiz(quiz_id):
     try:
         if 'token' not in session:
-            flash("Either no account detected or session expired!")
+            return redirect(url_for('login', trigger_alert = True))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
-        return redirect(url_for('login'))
+        return redirect(url_for('login', trigger_alert = True))
     
     quiz = get_quiz(quiz_id)
     if quiz is None:
@@ -301,11 +292,11 @@ def submit_quiz(quiz_id):
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         student_id = json_token_student['id']
-        print(student_id)
+        # print(student_id)
     except jwt.exceptions.ExpiredSignatureError:
         return "<h1>Expired session!</h1>"
     
-    directory = "Student_answers/correct_answers"
+    directory = "Student_answers/correct_answers/"
     filename = f'{quiz_id}_{student_id}.txt'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
@@ -316,12 +307,15 @@ def submit_quiz(quiz_id):
     if quiz is None:
         return "Quiz not found", 404
     
+    print("QUIZ", quiz)
+    
     correct_answers_full = [q['right_answer'] for q in quiz]
+    print(correct_answers_full)
     correct_answers = [answer[0].upper() for answer in correct_answers_full]
 
-    print(selected_options, correct_answers)
+    # print(selected_options, correct_answers)
     num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
-    print(num_correct)
+    # print(num_correct)
 
     return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options), selected_options=selected_options, correct_options=correct_answers, is_logged_in=session.get('token', False))
 
@@ -334,21 +328,16 @@ def profile():
     try:
         if 'token' not in session:
             flash("Either no account detected or session expired!")
-            return redirect(url_for('login'))
+            return redirect(url_for('login', trigger_alert = True))
 
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         user_id = json_token['id']
         quizzes = get_quizzes_by_user(user_id)
 
-        # ? IF there is time implement different messages
-
-        print(quizzes)
-
-        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False))
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1)
     except jwt.exceptions.ExpiredSignatureError:
-        flash("Either no account detected or session expired!")
-        return redirect(url_for('login'))
+        return redirect(url_for('login', trigger_alert = True))
 
 @app.route('/quiz/<int:quiz_id>/statistics')
 def get_statistics(quiz_id):

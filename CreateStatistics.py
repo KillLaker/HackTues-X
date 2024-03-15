@@ -87,6 +87,7 @@ def create_statistics(quiz_id):
         labels = list(counts.keys())
         values = list(counts.values())
 
+
         plt.figure(figsize=(8, 6))
         plt.bar(labels, values, color=['blue', 'orange', 'green', 'red'])
         plt.title(f'Question {i} Answer Distribution')
@@ -102,6 +103,7 @@ def create_statistics(quiz_id):
         plt.close()
         print(f'Saved histogram for Question {i} at: {save_path}')
 
-
+#test
 create_statistics('1')
 print("Histograms saved successfully!")
+

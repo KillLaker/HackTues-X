@@ -1,0 +1,72 @@
+body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; flex-direction: column; color: white;background: rgb(64,26,74);background: linear-gradient(90deg, rgba(64,26,74,1) 0%, rgba(2,0,36,1) 50%, rgba(65,20,77,1) 100%);}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 20px auto;
+    color: white;
+}
+
+.project-name {
+    font-size: 40px;
+}
+
+.page-information {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    margin-bottom: 15px;
+}
+
+.maps {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.map {
+    width: 45%;
+    height: 20rem;
+    border-radius: 20px;
+    background-color: #ad4dff;
+    margin: 0 100px;
+    opacity: 0.35;
+    overflow: hidden;
+}
+
+.creators-tab {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.creators {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.creator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.creator-name {
+    font-style: italic;
+}
+
+.creator-icon {
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    margin-bottom: 5px;
+}
