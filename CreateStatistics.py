@@ -44,18 +44,16 @@ def check_question_answers(question_answers, correct_answers):
             incorrect += 1
     return correct, incorrect
 
-def create_statistics():
+def create_statistics(quiz_id):
     root = Tk()
     root.title("Test statistics")
     root.iconbitmap('statistics.png')
     root.geometry('800x400')
 
-    answer_directory = '/Student_answers/correct_answers'
+    answer_directory = f'/Student_answers/correct_answers/{quiz_id}_correct_answers'
     correct_answers = c_a.read_correct_answers(answer_directory)
 
-
-
-    student_answers = s_a.get_student_answers('Student_answers')
+    student_answers = s_a.get_student_answers('Student_answers', quiz_id)
     for i, (student_id, answers) in enumerate(student_answers, start=1):
         save_path_statistics = os.path.dirname(__file__) + f'/Statistics/statistic_{i}.png'
         statistics(answers, save_path_statistics, i)
@@ -66,4 +64,3 @@ def create_statistics():
 
     print("Histograms saved successfully!")
 
-create_statistics()
