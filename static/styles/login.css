@@ -18,7 +18,6 @@ input[type="password"] {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -45,10 +44,9 @@ input[type="submit"]:hover {
 
 .container {
     background-color: #5712905a;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.459);
     padding: 20px;
     border-radius: 10px;
     width: 300px;
     text-align: center;
-    border: 1px solid white;
 }

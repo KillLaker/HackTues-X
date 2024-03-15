@@ -31,7 +31,7 @@ def home():
             flash("Either no account detected or session expired!")
             return redirect(url_for('login'))
 
-        return render_template('index.html')
+        return render_template('index.html', is_logged_in=session.get('token', False))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
@@ -252,11 +252,18 @@ def get_quizzes_by_user(user_id):
 
 @app.route("/quiz/<int:quiz_id>")
 def quiz(quiz_id):
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
+        return redirect(url_for('login'))
+    
     quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
     print(quiz)
-    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id)
+    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
 #    Handles quiz submitting with generating a  #
@@ -310,7 +317,7 @@ def profile():
 
         print(quizzes)
 
-        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id))
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))

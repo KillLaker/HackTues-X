@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz - My profile</title>
     <link rel="stylesheet" href="../static/styles/myprofile.css">
+    <link rel="stylesheet" href="../static/styles/nav.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="topnav" id="myTopnav">
         <div class="nav-btns">
-            <a href="/login">Login</a>
-            <a href="/logout">Logout</a>
+            {% if is_logged_in %}
+                <a href="/logout">Logout</a>
+                <a class="b-w" href="/profile">Profile</a>
+            {% else %}
+                <a class="b-w" href="/login">Login</a>
+            {% endif %}
         </div>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <i class="fa fa-bars"></i>#}
-        </a>
-    </div>
-    <div class="sidebar">
-        <button class="create-quiz-btn">Create new quiz</button>
     </div>
     <div class="main-content">
         <h1 class="main-title">Hello, {{ username }}</h1>
