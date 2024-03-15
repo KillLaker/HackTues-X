@@ -11,6 +11,7 @@ from openai import OpenAI
 from werkzeug.utils import secure_filename
 from convert_files_to_txt import *
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 cnx = mysql.connector.connect(
@@ -152,6 +153,13 @@ def get_uploaded_file():
 #     Inserts the quiz in the DB      #
 # ----------------------------------- #
 
+def write_correct_answers(quiz_id, quiz):
+    file_path = os.path.join("Student_answers", "correct_answers", f"{quiz_id}_correct_answers.txt")
+    
+    with open(file_path, "w") as file:
+        for question in quiz:
+            file.write(f"{question['right_answer']}\n")
+
 def insert_quiz(quiz, owner_id):
     cursor = cnx.cursor()
 
@@ -166,9 +174,10 @@ def insert_quiz(quiz, owner_id):
             is_correct = (a[0].upper() == q['right_answer'].upper())
             print("IsCorrect: ", is_correct, "\n Answer: ", a, "\n Right Answer: ", q['right_answer'])
             cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)", (question_id, a, is_correct))
-
+    write_correct_answers(quiz_id, quiz)
     cnx.commit()
     cursor.close()
+
 
 # ----------------------------------- #
 #  Returns a specific quiz by its id  #
@@ -261,8 +270,11 @@ def submit_quiz(quiz_id):
     except jwt.exceptions.ExpiredSignatureError:
         return "<h1>Expired session!</h1>"
     
+    directory = "Student_answers/correct_answers"
     filename = f'{quiz_id}_{student_id}.txt'
-    with open(filename, 'w') as f:
+    filepath = os.path.join(directory, filename)
+    os.makedirs(directory, exist_ok=True)
+    with open(filepath, 'w') as f:
         f.write(post_request_text)
     return 'Quiz submitted! Answers saved in ' + filename
 
