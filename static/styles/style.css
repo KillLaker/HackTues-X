@@ -13,26 +13,16 @@ input:focus{outline: none;}
 .mx-20{margin: 20px 0;}
 .p-53015{padding: 5px 30px 15px;}
 
-#main-page{
+.file-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20%;
+    height: 500px;
 }
 
-#file-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#file-field {
-    display: none;
-}
-
-#file-field-label {
+#file-field {display: none;}
+.file-field-label {
     background-color: #571290;
     color: white;
     padding: 20px 40px;
@@ -42,23 +32,17 @@ input:focus{outline: none;}
     text-align: center;
     line-height: 50px;
     border: none;
-    border-radius: 25px; /* Rounded corners for the button */
+    border-radius: 25px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    margin-bottom: 20px; /* Spacing between this button and other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
     transition: background-color 0.3s ease;
     width: 320px;
     height: 50px;
+    margin-bottom: 50px;
 }
-
-#file-field-label:hover {
-    background-color: #742cb8; /* Slightly lighter color on hover */
-}
-
-#submit-field {
-    display: none;
-}
-
+.file-field-label:hover {background-color: #742cb8;}
+.submit-field {display: none;}
 #submit-field-label {
     text-transform: uppercase;
     text-align: center;
@@ -73,26 +57,34 @@ input:focus{outline: none;}
     border-radius: 40px;
     line-height: 40px;
 }
-
 #submit-field-label:hover {
     background: #742cb8;
     transition: 0.2s linear;
 }
-
-#chosen-file {
+.chosen-file {
     font-style: italic;
     text-align: center;
     transform: translateY(-150%);
 }
-
-#import-icon {
+.import-icon {
     height: 60px;
     width: 60px;
     padding-right: 20px;
     transform: translateY(-5px);
 }
-
-#import-button-content {
+.import-button-content {
     display: flex;
     flex-direction: row;
+}
+.spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
