@@ -3,8 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <link rel = "stylesheet" href = "../static/styles/about.css">
+  <link rel="stylesheet" href="../static/styles/nav.css">
 </head>
 <body>
+    <div class="topnav" id="myTopnav">
+        <div class="nav-btns">
+            {% if is_logged_in %}
+                <a href="/logout">Logout</a>
+                <a class="b-w" href="/profile">Profile</a>
+            {% else %}
+                <a class="b-w" href="/login">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    
     <div class = "main-content">
         <div class = "page-information">
             <h1 class = "project-name">Quizstics</h1>

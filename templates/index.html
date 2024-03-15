@@ -4,10 +4,21 @@
     <link rel="stylesheet" href="../static/styles/style.css" />
     <link
       href="https://unpkg.com/css.gg@2.0.0/icons/css/import.css"
-      rel="stylesheet"
-    />
+      rel="stylesheet"/>
+    <link rel="stylesheet" href="../static/styles/nav.css">
   </head>
   <body>
+    <div class="topnav" id="myTopnav">
+      <div class="nav-btns">
+          {% if is_logged_in %}
+              <a href="/logout">Logout</a>
+              <a class="b-w" href="/profile">Profile</a>
+          {% else %}
+              <a class="b-w" href="/login">Login</a>
+          {% endif %}
+      </div>
+    </div>
+
     <div id="main-page">
       <form
         id="file-form"

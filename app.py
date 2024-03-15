@@ -41,8 +41,7 @@ def home():
 
 @app.route('/about', methods = ['GET'])
 def about():
-    return render_template('about.html')
-
+    return render_template('about.html', is_logged_in=session.get('token', False))
 
 # ----------------------------------- #
 #        Login returns jwt token      #
