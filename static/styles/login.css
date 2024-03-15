@@ -20,6 +20,7 @@ input[type="password"] {
     margin: 10px 0;
     border-radius: 5px;
     box-sizing: border-box;
+    color: black;
 }
 
 input[type="submit"] {
