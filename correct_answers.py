@@ -11,5 +11,5 @@ def read_correct_answers(directory):
             answers.append(line.strip())
     return answers
 
-read_correct_answers("/Student_answers/correct_answers/1_correct_answers")
+#read_correct_answers("/Student_answers/correct_answers/1_correct_answers")
 

@@ -19,6 +19,7 @@ body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     display: flex;
     width: 100%;
     justify-content: space-evenly;
+    margin-top: 10px;
     margin-bottom: 15px;
 }
 
@@ -33,10 +34,27 @@ body {display: flex; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     width: 45%;
     height: 20rem;
     border-radius: 20px;
-    background-color: #ad4dff;
+    background-color: rgba(173, 77, 255, 0.35);
     margin: 0 100px;
-    opacity: 0.35;
-    overflow: hidden;
+    overflow: auto;
+    padding: 0 10px;
+}
+
+.map::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.map-title {
+
+}
+
+.map-body {
+    display: flex;
+    font-size: 20px;
+    padding: 0 10px;
+    text-align: center;
+    margin: 20px 10px;
 }
 
 .creators-tab {
