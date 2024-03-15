@@ -32,7 +32,7 @@ To run QuizStix locally, follow these steps:
 ```bash
 cd quizmaster
 pip install -r requirements.txt
-
+```
 ```bash
 flask run
 ```
