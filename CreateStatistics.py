@@ -44,7 +44,7 @@ def check_question_answers(question_answers, correct_answers):
             incorrect += 1
     return correct, incorrect
 
-if __name__ == '__main__':
+def create_statistics():
     root = Tk()
     root.title("Test statistics")
     root.iconbitmap('statistics.png')
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         statistics(answers, save_path_statistics, i)
         correct_count, incorrect_count = check_question_answers(answers, correct_answers)
         save_path_diagrams = os.path.dirname(__file__) + f'/Diagrams/diagrams_{student_id}.png'
-        print('aaa', correct_count, incorrect_count)
+        print(correct_count, incorrect_count)
         answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i, student_id)
 
     # for i, question_answers in enumerate(zip(*answers)):
@@ -81,3 +81,5 @@ if __name__ == '__main__':
     #
     #
     print("Histograms saved successfully!")
+
+create_statistics()
