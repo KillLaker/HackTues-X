@@ -69,7 +69,7 @@ def generate_token(id, permission):
     payload = {
         "id": id,
         "permission": permission,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=0.016)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
@@ -237,7 +237,6 @@ def submit_quiz(quiz_id):
                 selected_options.append(value)
 
     post_request_text = '\n'.join(selected_options)
-    #! test this i have no idea if that is the right way to do it - Stily
     try:
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
