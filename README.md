@@ -1,5 +1,9 @@
 # QuizStix
 
+
+Trello list:
+https://trello.com/b/809PZDhl/niann
+
 QuizStix is a web application designed to assist educators in assessing their students' understanding of presented material by generating quizzes based on provided presentations/documents/texts related to a given lesson.
 
 ## Features
