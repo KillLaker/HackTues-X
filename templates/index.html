@@ -38,11 +38,11 @@
               name="questions-number"
             />
           </div>
-          <input type="file" id="file-field" name="uploaded-file" />
+          <input type="file" id="file-field" name="uploaded-file"/>
           <label for="file-field" class="file-field-label">
             <div class="import-button-content">
               <img class="import-icon" src="../static/assets/import.png" />
-              <span>Import text file</span>
+              <span>Import file</span>
             </div>
           </label>
         </div>
@@ -61,8 +61,7 @@
     <script>
       let inputFile = document.getElementById("file-field");
       let fileNameField = document.getElementById("chosen-file-name");
-      let submitButton = document.getElementById("submit-field");
-      let submitButtonFake = document.getElementById("submit-field-label");
+      let submitButton = document.getElementById("submit-field-label");
 
       let spinner = document.getElementById("spinner");
 

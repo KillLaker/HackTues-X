@@ -7,7 +7,7 @@ import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-import CreateStatistics
+#import CreateStatistics
 from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 from werkzeug.utils import secure_filename
@@ -339,21 +339,21 @@ def profile():
     except jwt.exceptions.ExpiredSignatureError:
         return redirect(url_for('login', trigger_alert = True))
 
-@app.route('/quiz/<int:quiz_id>/statistics')
-def get_statistics(quiz_id):
-    try:
-        if 'token' not in session:
-            flash("Either no account detected or session expired!")
-    except jwt.exceptions.ExpiredSignatureError:
-        flash("Either no account detected or session expired!")
-        return redirect(url_for('login'))
-
-    diagrams_files = [f"../Diagrams/{file}" for file in os.listdir('Diagrams') if file.endswith('.png')]
-
-    statistics_files = [f"../Statistics/{file}" for file in os.listdir('Statistics') if file.endswith('.png')]
-
-    CreateStatistics.create_statistics(quiz_id)
-    return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files)
+# @app.route('/quiz/<int:quiz_id>/statistics')
+# def get_statistics(quiz_id):
+#     try:
+#         if 'token' not in session:
+#             flash("Either no account detected or session expired!")
+#     except jwt.exceptions.ExpiredSignatureError:
+#         flash("Either no account detected or session expired!")
+#         return redirect(url_for('login'))
+#
+#     diagrams_files = [f"../Diagrams/{file}" for file in os.listdir('Diagrams') if file.endswith('.png')]
+#
+#     statistics_files = [f"../Statistics/{file}" for file in os.listdir('Statistics') if file.endswith('.png')]
+#
+#     CreateStatistics.create_statistics(quiz_id)
+#     return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files)
 
 
 if __name__ == "__main__":

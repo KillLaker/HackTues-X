@@ -81,6 +81,7 @@ input:focus{outline: none;}
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 15rem;
 }
 
 input[type="number"] {
