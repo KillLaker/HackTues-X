@@ -55,6 +55,20 @@ def login():
     else:
         return render_template("login.html")
 
+
+@app.route('/logout', methods = ['GET'])
+def logout():
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+            return redirect(url_for('login'))
+
+        session.pop('token', None)
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
+
+    return redirect(url_for('login'))
+
 # ----------------------------------- #
 #  Returns the user object in the DB  #
 # ----------------------------------- #
