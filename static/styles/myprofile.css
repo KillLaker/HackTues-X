@@ -107,6 +107,7 @@ body {
     text-transform: uppercase;
     border: none;
     border-radius: 25px;
+    border-radius: 25px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
@@ -115,7 +116,7 @@ body {
 }
 
 .create-quiz-btn:hover {
-    background-color: #742cb8; /* Slightly lighter color on hover */
+    background-color: #742cb8;
 }
 
 input::-webkit-outer-spin-button,
