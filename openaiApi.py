@@ -10,7 +10,7 @@ def generate_multiple_choice_questions():
 
     client = OpenAI(api_key=api_key)
 
-    quiz_source = open("static/uploads/quiz-source.txt", "r")
+    quiz_source = open("static/uploads/quiz-source.txt", "r", encoding="utf-8")
     file_text = quiz_source.read()
 
     response = client.chat.completions.create(
@@ -18,7 +18,7 @@ def generate_multiple_choice_questions():
         messages=[
             {
                 "role": "user",
-                "content": "Generate 10 multiple-choice questions based on the following passage: " + file_text + "\nAfter each question, include the correct answer in the format ': X' after all question choices, where X is the correct letter and only the capital letter. Please ensure that the questions are clear, concise, and directly related to the provided information. Use a variety of question types (e.g., factual, inferential) to enhance the diversity of the quiz.Remember to maintain consistency in formatting and grammar throughout the questions and answers."
+                "content": "Generate 10 multiple-choice questions with 4 choices and only one correct based on the given information. " + file_text + "\n The language of the question must match the input information language (Български, English). After each question, include the correct answer in the format ': X' after all question choices, where X is the correct letter and only the capital letter.  Please ensure that the questions are clear, concise, and directly related to the provided information. Use a variety of question types (e.g., factual, inferential) to enhance the diversity of the quiz. Remember to maintain consistency in formatting and grammar throughout the questions and answers."
 
 # "file_text + "\ngenerate 10 multiple choice questions based on the information given above and after every question print the right answer like this Answer: X"
             }
@@ -68,6 +68,8 @@ def generate_multiple_choice_questions():
         print("Question:", question["question"])
         print("Answers:", question["answers"])
         print("Right answer:", question["right_answer"])
+
+    print(response_content)
 
     return questions
 
