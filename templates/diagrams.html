@@ -10,12 +10,12 @@
             <h1>Quiz</h1>
         </div>
         <div class="main-content">
-            {% for diagram_file, statistic_file in zip(diagrams_files, statistics_files) %}
+            {% for i in range(diagrams_files|length) %}
             <div class="quiz-item">
                 <h2>Question: What is this?</h2>
                 <div class="image-options">
-                    <img src="{{ diagram_file }}" alt="Diagram" class="option-image">
-                    <img src="{{ statistic_file }}" alt="Statistic" class="option-image">
+                    <img src="{{ diagrams_files[i] }}" alt="Diagram" class="option-image">
+                    <img src="{{ statistics_files[i] }}" alt="Statistic" class="option-image">
                 </div>
             </div>
             {% endfor %}

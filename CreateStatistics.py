@@ -64,3 +64,6 @@ def create_statistics(quiz_id):
 
     print("Histograms saved successfully!")
 
+    root.mainloop()
+    root.destroy()
+
