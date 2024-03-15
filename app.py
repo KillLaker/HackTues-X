@@ -37,6 +37,11 @@ def home():
         return redirect(url_for('login'))
 
 
+@app.route('/about', methods = ['GET'])
+def about():
+    return render_template('about.html')
+
+
 # ----------------------------------- #
 #        Login returns jwt token      #
 # ----------------------------------- #
