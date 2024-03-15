@@ -72,9 +72,9 @@ def logout():
 
         session.pop('token', None)
     except jwt.exceptions.ExpiredSignatureError:
-        pass
+        return redirect(url_for('login', trigger_alert=True))
 
-    return redirect(url_for('login', trigger_alert = True))
+    return redirect(url_for('login'))
 
 # ----------------------------------- #
 #  Returns the user object in the DB  #
