@@ -4,16 +4,16 @@ import mysql.connector
 import argon2
 import jwt
 import datetime
+import CreateStatistics
 from flask import Flask, render_template, request, redirect, url_for, flash
 from jinja2 import Environment, PackageLoader, select_autoescape
-
-import CreateStatistics
 from openaiApi import generate_multiple_choice_questions
 from openai import OpenAI
 from werkzeug.utils import secure_filename
 from convert_files_to_txt import *
 from dotenv import load_dotenv
-import os
+from student_answers import combine_student_answers
+from flask import url_for
 
 load_dotenv()
 cnx = mysql.connector.connect(
@@ -37,7 +37,6 @@ def home():
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
-
 
 @app.route('/about', methods = ['GET'])
 def about():
@@ -176,11 +175,20 @@ def write_correct_answers(quiz_id, quiz):
     with open(file_path, "w") as file:
         for question in quiz:
             file.write(f"{question['right_answer']}\n")
+        
+def get_prev_quiz_id():
+    cursor = cnx.cursor()
+    cursor.execute("SELECT id FROM quiz ORDER BY id DESC LIMIT 1")
+    quiz_id = cursor.fetchone()
+    cursor.close()
+    return quiz_id[0]
 
 def insert_quiz(quiz, owner_id):
     cursor = cnx.cursor()
 
-    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", ('Quiz Name', owner_id))
+    name = "Quiz " + str(get_prev_quiz_id() + 1)
+
+    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (name, owner_id))
     quiz_id = cursor.lastrowid
 
     for i, q in enumerate(quiz):
@@ -189,7 +197,6 @@ def insert_quiz(quiz, owner_id):
 
         for j, a in enumerate(q['answers']):
             is_correct = (a[0].upper() == q['right_answer'].upper())
-            # print("IsCorrect: ", is_correct, "\n Answer: ", a, "\n Right Answer: ", q['right_answer'])
             cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)", (question_id, a, is_correct))
     write_correct_answers(quiz_id, quiz)
     cnx.commit()
@@ -269,7 +276,6 @@ def quiz(quiz_id):
     quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
-    # print(quiz)
     return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
@@ -296,26 +302,21 @@ def submit_quiz(quiz_id):
     except jwt.exceptions.ExpiredSignatureError:
         return "<h1>Expired session!</h1>"
     
-    directory = "Student_answers/correct_answers/"
+    directory = "Student_answers/"
     filename = f'{quiz_id}_{student_id}.txt'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as f:
         f.write(post_request_text)
+    combine_student_answers(directory)
 
     quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
     
-    print("QUIZ", quiz)
-    
     correct_answers_full = [q['right_answer'] for q in quiz]
-    print(correct_answers_full)
     correct_answers = [answer[0].upper() for answer in correct_answers_full]
-
-    # print(selected_options, correct_answers)
     num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
-    # print(num_correct)
 
     return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options), selected_options=selected_options, correct_options=correct_answers, is_logged_in=session.get('token', False))
 
@@ -348,12 +349,17 @@ def get_statistics(quiz_id):
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
 
-    diagrams_files = [f"../Diagrams/{file}" for file in os.listdir('Diagrams') if file.endswith('.png')]
+    from flask import url_for
 
-    statistics_files = [f"../Statistics/{file}" for file in os.listdir('Statistics') if file.endswith('.png')]
-
+    diagrams_files = [url_for('static', filename=f"Diagrams/{file}") for file in os.listdir('static/Diagrams') if file.endswith('.png')]
+    statistics_files = [url_for('static', filename=f"Statistics/{file}") for file in os.listdir('static/Statistics') if file.endswith('.png')]
+    
     CreateStatistics.create_statistics(quiz_id)
-    return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files)
+
+    quiz = get_quiz(quiz_id)
+    print(quiz[1])
+
+    return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files, quiz=quiz)
 
 
 if __name__ == "__main__":

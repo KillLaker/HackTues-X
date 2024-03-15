@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="../static/styles/diagrams.css">
+    <link rel="stylesheet" href="../../static/styles/diagrams.css">
     <title>Quiz</title>
 </head>
 <body>
     <div class="main-content">
         <div class="main-title">
-            <h1>Quiz</h1>
+            <h1>Quiz Statistics</h1>
         </div>
         <div class="main-content">
-            {% for i in range(diagrams_files|length) %}
+            {% for i in range(statistics_files|length) %}
             <div class="quiz-item">
-                <h2>Question: What is this?</h2>
+                <h2>Question: {{ quiz[i]['question'] }}</h2>
                 <div class="image-options">
-                    <img src="{{ diagrams_files[i] }}" alt="Diagram" class="option-image">
                     <img src="{{ statistics_files[i] }}" alt="Statistic" class="option-image">
                 </div>
             </div>
             {% endfor %}
+            <h2>Student diagrams</h2>
+            <div class="quiz-item-2">
+                {% for i in range(diagrams_files|length) %}
+                <div class="image-options">
+                    <img src="{{ diagrams_files[i] }}" alt="Diagram" class="option-image">
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </body>
