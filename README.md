@@ -26,3 +26,10 @@ To run QuizStix locally, follow these steps:
 1. **Clone Repository:**
    ```bash
    git clone https://github.com/your-username/QuizStix.git
+   
+## Install Dependencies
+
+```bash
+cd quizmaster
+pip install -r requirements.txt
+
