@@ -1,12 +1,12 @@
 1
-A
-A
 C
+D
 B
 B
-B
-B
-A
+C
+D
+C
+D
 D
 A
 6

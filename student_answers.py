@@ -44,12 +44,12 @@ def combine_student_answers(directory):
 
     for quiz_id, files in quiz_files.items():
         combined_filename = f'{quiz_id}_combined.txt'
-        with open(os.path.join(directory, combined_filename), 'w') as combined_file:
+        with open(os.path.join('Student_answers\\combined', combined_filename), 'w') as combined_file:
             for filename in files:
                 student_id = filename.split('_')[1].split('.')[0]
-                combined_file.write(f'{student_id}\n')  # Write student ID
+                combined_file.write(f'{student_id}\n')  
                 with open(os.path.join(directory, filename), 'r') as student_file:
-                    combined_file.write(student_file.read().strip() + '\n')  # Write student answers
+                    combined_file.write(student_file.read().strip() + '\n')  
                 print(f'Added answers for student {student_id} from file {filename}')
         print(f'Combined answers for quiz {quiz_id} into file {combined_filename}')
 

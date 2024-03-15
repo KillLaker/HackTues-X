@@ -175,11 +175,20 @@ def write_correct_answers(quiz_id, quiz):
     with open(file_path, "w") as file:
         for question in quiz:
             file.write(f"{question['right_answer']}\n")
+        
+def get_prev_quiz_id():
+    cursor = cnx.cursor()
+    cursor.execute("SELECT id FROM quiz ORDER BY id DESC LIMIT 1")
+    quiz_id = cursor.fetchone()
+    cursor.close()
+    return quiz_id[0]
 
 def insert_quiz(quiz, owner_id):
     cursor = cnx.cursor()
 
-    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", ('Quiz Name', owner_id))
+    name = "Quiz " + str(get_prev_quiz_id() + 1)
+
+    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (name, owner_id))
     quiz_id = cursor.lastrowid
 
     for i, q in enumerate(quiz):
@@ -299,7 +308,6 @@ def submit_quiz(quiz_id):
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as f:
         f.write(post_request_text)
-    directory = "Student_answers/combined/"
     combine_student_answers(directory)
 
     quiz = get_quiz(quiz_id)
