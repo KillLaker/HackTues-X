@@ -95,3 +95,7 @@ input[type="radio"]:focus {
     margin-left: 10px;
     margin-top: -2px;
 }
+
+.correct{
+    color: green;
+}
