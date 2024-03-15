@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Page</title>
+    <title>Quiz - My profile</title>
     <link rel="stylesheet" href="../static/styles/myprofile.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <button class="create-quiz-btn">Create new quiz</button>
-    </div>
     <div class="main-content">
-        <h1 class="main-title">My Profile</h1>
+        <h1 class="main-title">Hello, {{ username }}</h1>
+        <a href='/' class="create-quiz-btn">Create new quiz</a>
+        <div class="buttons">
         {% for quiz in quizzes %}
-            <a href="/quiz/{{ quiz[0]['id'] }}" class="quiz-item">{{ quiz[0]['question'] }}</a>
+            <div class="quiz-buttons">
+                <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
+            </div>
         {% endfor %}
+        </div>
     </div>
 
 </body>
