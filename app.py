@@ -56,10 +56,12 @@ def login():
             session['token'] = token
             return redirect(url_for('profile'))
 
-        except argon2.exceptions.VerifyMismatchError:
-            return jsonify({"message": "Invalid username or password"}), 401
+        except (argon2.exceptions.VerifyMismatchError, TypeError):
+            return redirect(url_for('login', trigger_alert = True))
     else:
-        return render_template("login.html")
+        trigger_alert = request.args.get('trigger_alert', type=bool)
+
+        return render_template("login.html", trigger_alert = trigger_alert)
 
 
 @app.route('/logout', methods = ['GET'])
@@ -67,13 +69,13 @@ def logout():
     try:
         if 'token' not in session:
             flash("Either no account detected or session expired!")
-            return redirect(url_for('login'))
+            return redirect(url_for('login', trigger_alert = True))
 
         session.pop('token', None)
     except jwt.exceptions.ExpiredSignatureError:
-        flash("Either no account detected or session expired!")
+        pass
 
-    return redirect(url_for('login'))
+    return redirect(url_for('login', trigger_alert = True))
 
 # ----------------------------------- #
 #  Returns the user object in the DB  #
@@ -274,10 +276,10 @@ def get_quizzes_by_user(user_id):
 def quiz(quiz_id):
     try:
         if 'token' not in session:
-            flash("Either no account detected or session expired!")
+            return redirect(url_for('login', trigger_alert = True))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
-        return redirect(url_for('login'))
+        return redirect(url_for('login', trigger_alert = True))
     
     quiz = get_quiz(quiz_id)
     if quiz is None:
@@ -338,7 +340,7 @@ def profile():
     try:
         if 'token' not in session:
             flash("Either no account detected or session expired!")
-            return redirect(url_for('login'))
+            return redirect(url_for('login', trigger_alert = True))
 
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
@@ -347,8 +349,7 @@ def profile():
 
         return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1)
     except jwt.exceptions.ExpiredSignatureError:
-        flash("Either no account detected or session expired!")
-        return redirect(url_for('login'))
+        return redirect(url_for('login', trigger_alert = True))
 
 @app.route('/quiz/<int:quiz_id>/statistics')
 def get_statistics(quiz_id):
