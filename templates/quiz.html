@@ -9,22 +9,24 @@
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
                 <h1>Quiz</h1>
             </div>
-            <form class="w-70 text-center" action = "/quiz/submit" method = "post">
+            <form class="w-70 text-center" action = "/quiz/{{ quiz_id }}/submit" method = "post">
+                {% set questionCounter = namespace(value=1) %}
                 {% for question in quiz %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
                         <h2>{{ question.question }}</h2>
                         {% set ns = namespace(counter=0) %}
                         {% for answer in question.answers %}
                             <div class="options">
-                                <input type = "radio" name = "question_{{ loop.index }}" value = "{{ 'ABCD'[ns.counter] }}" required>
+                                <!-- Use questionCounter for the radio button names -->
+                                <input type="radio" name="question_{{ questionCounter.value }}" value="{{ 'ABCD'[ns.counter] }}" required>
                                 <label>{{ answer }}</label>
                             </div>
                             <br>
                             {% set ns.counter = ns.counter + 1 %}
                         {% endfor %}
+                        {% set questionCounter.value = questionCounter.value + 1 %}
                     </div>
                 {% endfor %}
-
                 <input class="button-poligon" type="submit" value="Submit">
             </form>
         </div>

@@ -8,7 +8,7 @@ def convert_file_to_text(file_path):
         parsed = parser.from_file(file_path)
         text = parsed['content']
         cleaned_text = remove_extra_newlines(text)
-        print(cleaned_text)
+        # print(cleaned_text)
         return cleaned_text
     else:
         return None

@@ -62,6 +62,21 @@ def get_user(username, password):
     return None
 
 # ----------------------------------- #
+#     Get username from DB using id   #
+# ----------------------------------- #
+
+def get_username(user_id):
+    cursor = cnx.cursor()
+
+    cursor.execute("SELECT username FROM User WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+
+    if user is not None:
+        return user[0]
+
+    return None
+
+# ----------------------------------- #
 #  Returns JWT token from userid      #
 # ----------------------------------- #
 
@@ -122,7 +137,6 @@ def get_uploaded_file():
         {'question': '10. How do authentication and authorization work together in a secure environment?', 'answers': ['A. Authentication and authorization are not related', 'B. Authorization is not necessary if authentication is successful', 'C. Users must prove their identities before being granted access to requested resources', 'D. Authorization is always granted before authentication'], 'right_answer': 'C'}
     ]
 
-    #! should add this 
     insert_quiz(quiz, student_id)
 
     filename = secure_filename(uploaded_file.filename)
@@ -149,7 +163,8 @@ def insert_quiz(quiz, owner_id):
         question_id = cursor.lastrowid
 
         for j, a in enumerate(q['answers']):
-            is_correct = (a == q['right_answer'])
+            is_correct = (a[0].upper() == q['right_answer'].upper())
+            print("IsCorrect: ", is_correct, "\n Answer: ", a, "\n Right Answer: ", q['right_answer'])
             cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)", (question_id, a, is_correct))
 
     cnx.commit()
@@ -220,7 +235,8 @@ def quiz(quiz_id):
     quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
-    return render_template('quiz.html', quiz=quiz)
+    print(quiz)
+    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id)
 
 # --------------------------------------------- #
 #    Handles quiz submitting with generating a  #

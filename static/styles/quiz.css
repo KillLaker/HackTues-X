@@ -18,7 +18,7 @@ input[type="radio"] {
     appearance: none;
     background-color: var(--form-background);
     margin: 0;
-  
+
     font: inherit;
     color: white;
     width: 1.15em;
@@ -26,12 +26,12 @@ input[type="radio"] {
     border: 0.15em solid white;
     border-radius: 50%;
     transform: translateY(-0.075em);
-  
+
     display: grid;
     place-content: center;
-  }
-  
-  input[type="radio"]::before {
+    }
+
+input[type="radio"]::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
@@ -40,16 +40,16 @@ input[type="radio"] {
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em var(--form-control-color);
     background-color: white;
-  }
-  
-  input[type="radio"]:checked::before {
+}
+
+input[type="radio"]:checked::before {
     transform: scale(1);
-  }
-  
-  input[type="radio"]:focus {
+}
+
+input[type="radio"]:focus {
     outline: max(2px, 0.15em) solid white;
     outline-offset: max(2px, 0.15em);
-  }
+}
 
 .main-page{
     display: flex;
@@ -57,11 +57,13 @@ input[type="radio"] {
     align-items: center;
     justify-content: center;
 }
+
 .quiz-bubble{
     background-color: #5712905a;
     border-radius: 8px;
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
 }
+
 .button-poligon {
     text-transform: uppercase;
     height: 50px;
@@ -76,15 +78,18 @@ input[type="radio"] {
     color: white;
     cursor: pointer;
 }
+
 .button-poligon:hover {
     background: #742cb8;
     transition: 0.2s linear;
 }
+
 .options{
     display: flex;
     font-size: 15px;
     margin-left: 10px;
 }
+
 .options label{
     margin-left: 10px;
     margin-top: -2px;
