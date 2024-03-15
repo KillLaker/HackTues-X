@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram Viewer</title>
+<style>
+
+    .diagram-container {
+        position: relative;
+        width: 600px;
+        margin: 0 auto;
+    }
+
+    .diagram-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+    }
+
+    .arrow.left {
+        left: 0;
+    }
+
+    .arrow.right {
+        right: 0;
+    }
+
+    .arrow::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        padding: 5px;
+    }
+
+    .arrow.left::before {
+        transform: translate(-50%, -50%) rotate(135deg);
+    }
+
+    .arrow.right::before {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+</style>
+</head>
+<body>
+<div class="diagram-container">
+    <img src="diagram1.jpg" class="diagram-img" alt="Diagram 1">
+    <div class="arrow left" onclick="navigate(-1)"></div>
+    <div class="arrow right" onclick="navigate(1)"></div>
+</div>
+<script>
+    // JavaScript for navigation
+    let currentDiagramIndex = 0;
+
+    function navigate(direction) {
+        const diagrams = document.querySelectorAll('.diagram-img');
+        currentDiagramIndex += direction;
+        if (currentDiagramIndex < 0) {
+            currentDiagramIndex = diagrams.length - 1;
+        } else if (currentDiagramIndex >= diagrams.length) {
+            currentDiagramIndex = 0;
+        }
+        // Hide all diagrams
+        diagrams.forEach(diagram => diagram.style.display = 'none');
+        // Show the current diagram
+        diagrams[currentDiagramIndex].style.display = 'block';
+    }
+</script>
+</body>
+</html>
