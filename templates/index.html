@@ -25,6 +25,7 @@
         method="post"
         enctype="multipart/form-data"
         action="/upload"
+        onsubmit="return onSubmitForm()"
       >
         <div class="input-information">
           <div class="number-input">
@@ -54,18 +55,28 @@
         <br />
         <input type="submit" id="submit-field" />
         <label for="submit-field" id="submit-field-label">Submit</label>
+        <div id="spinner" style="display: none;">Loading...</div>
       </form>
     </div>
     <script>
       let inputFile = document.getElementById("file-field");
       let fileNameField = document.getElementById("chosen-file-name");
-      let submitButton = document.getElementById("submit-field-label");
+      let submitButton = document.getElementById("submit-field");
+      let submitButtonFake = document.getElementById("submit-field-label");
+
+      let spinner = document.getElementById("spinner");
 
       inputFile.addEventListener("change", (event) => {
         fileNameField.textContent = event.target.files[0].name;
         submitButton.style.borderStyle = "dashed";
         submitButton.style.borderColor = "lightgrey";
       });
+
+      function onSubmitForm() {
+        submitButtonFake.style.display = "none";
+        spinner.style.display = "block";
+        return true;
+      }
     </script>
   </body>
 </html>
