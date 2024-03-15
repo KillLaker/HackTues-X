@@ -7,13 +7,19 @@
     <body>
         <div id = "main-page">
             <form id = "file-form" method = "post" enctype="multipart/form-data" action = "/upload">
-                <input type = "file" id = "file-field" name = "uploaded-file">
-                <label for = "file-field" id = "file-field-label">
-                    <div id = "import-button-content">
-                        <img id = "import-icon" src = "../static/assets/import.png">
-                        <span>Import text file</span>
+                <div class = "input-information">
+                    <div class = "number-input">
+                        <span>Choose number of questions:</span>
+                        <input type = "number" min = "1" max = "20" value = "10" name = "questions-number">
                     </div>
-                </label>
+                    <input type = "file" id = "file-field" name = "uploaded-file">
+                    <label for = "file-field" id = "file-field-label">
+                        <div id = "import-button-content">
+                            <img id = "import-icon" src = "../static/assets/import.png">
+                            <span>Import text file</span>
+                        </div>
+                    </label>
+                </div>
                 <br>
                 <div id = "chosen-file">
                     <span>Chosen file: </span>

@@ -25,7 +25,16 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 @app.route("/", methods=['GET'])
 def home():
-    return render_template('index.html')
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+            return redirect(url_for('login'))
+
+        return render_template('index.html')
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
+        return redirect(url_for('login'))
+
 
 # ----------------------------------- #
 #        Login returns jwt token      #
@@ -274,17 +283,22 @@ def submit_quiz(quiz_id):
 
 @app.route('/profile')
 def profile():
-    if 'token' not in session:
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+            return redirect(url_for('login'))
+
+        token = session['token']
+        json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+        user_id = json_token['id']
+        quizzes = get_quizzes_by_user(user_id)
+
+        # ? IF there is time implement different messages
+
+        return render_template('profile.html', quizzes=quizzes)
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
-    
-    token = session['token']
-    json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
-    user_id = json_token['id']
-    quizzes = get_quizzes_by_user(user_id)
-
-    #? IF there is time implement different messages 
-
-    return render_template('profile.html', quizzes=quizzes)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
