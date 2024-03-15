@@ -33,3 +33,9 @@ To run QuizStix locally, follow these steps:
 cd quizmaster
 pip install -r requirements.txt
 
+```bash
+flask run
+
+##Access the Application
+Visit http://localhost:5000 in your web browser.
+
