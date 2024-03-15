@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "../static/styles/style.css">
+        <link rel="stylesheet" href="../static/styles/style.css">
         <link href='https://unpkg.com/css.gg@2.0.0/icons/css/import.css' rel='stylesheet'>
     </head>
     <body>
@@ -13,25 +13,24 @@
                         <input type = "number" min = "1" max = "20" value = "10" name = "questions-number">
                     </div>
                     <input type = "file" id = "file-field" name = "uploaded-file">
-                    <label for = "file-field" id = "file-field-label">
-                        <div id = "import-button-content">
-                            <img id = "import-icon" src = "../static/assets/import.png">
+                    <label for = "file-field" class = "file-field-label">
+                        <div class = "import-button-content">
+                            <img class = "import-icon" src = "../static/assets/import.png">
                             <span>Import text file</span>
                         </div>
                     </label>
                 </div>
                 <br>
-                <div id = "chosen-file">
+                <div class = "chosen-file">
                     <span>Chosen file: </span>
                     <span id = "chosen-file-name">None</span>
                 </div>
-
                 <br>
-                <input type = "submit" id = "submit-field">
-                <label for = "submit-field" id = "submit-field-label">Submit</label>
+                <br>
+                <input type="submit" class="submit-field">
+                <label for="submit-field" id="submit-field-label">Submit</label>
             </form>
         </div>
-
         <script>
             let inputFile = document.getElementById('file-field');
             let fileNameField = document.getElementById('chosen-file-name');

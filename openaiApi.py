@@ -18,7 +18,9 @@ def generate_multiple_choice_questions():
         messages=[
             {
                 "role": "user",
-                "content": file_text + "\ngenerate 10 multiple choice questions based on the information given above and after every question print the right answer like this Answer: X"
+                "content": "Generate 10 multiple-choice questions based on the following passage: " + file_text + "\nAfter each question, include the correct answer in the format ': X' after all question choices, where X is the correct letter and only the capital letter. Please ensure that the questions are clear, concise, and directly related to the provided information. Use a variety of question types (e.g., factual, inferential) to enhance the diversity of the quiz.Remember to maintain consistency in formatting and grammar throughout the questions and answers."
+
+# "file_text + "\ngenerate 10 multiple choice questions based on the information given above and after every question print the right answer like this Answer: X"
             }
         ],
         temperature=1,
@@ -51,7 +53,7 @@ def generate_multiple_choice_questions():
                 ("A)", "B)", "C)", "D)")):
             current_answers.append(line)
 
-        elif line.startswith("Answer: "):
+        elif line.startswith(":"):
             current_right_answer = line.split(":")[1].strip()
 
     if current_question:
@@ -62,10 +64,12 @@ def generate_multiple_choice_questions():
         }
         questions.append(question_dict)
 
-    # for question in questions:
-    #     print("Question:", question["question"])
-    #     print("Answers:", question["answers"])
-    #     print("Right answer:", question["right_answer"])
+    for question in questions:
+        print("Question:", question["question"])
+        print("Answers:", question["answers"])
+        print("Right answer:", question["right_answer"])
 
     return questions
+
+generate_multiple_choice_questions()
 

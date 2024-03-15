@@ -146,7 +146,8 @@ def get_uploaded_file():
         {'question': '10. How do authentication and authorization work together in a secure environment?', 'answers': ['A. Authentication and authorization are not related', 'B. Authorization is not necessary if authentication is successful', 'C. Users must prove their identities before being granted access to requested resources', 'D. Authorization is always granted before authentication'], 'right_answer': 'C'}
     ]
 
-    insert_quiz(quiz, student_id)
+    # ! Uncomment when ready
+    # insert_quiz(quiz, student_id)
 
     filename = secure_filename(uploaded_file.filename)
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
@@ -221,14 +222,15 @@ def get_quiz(quiz_id):
 def get_quizzes_by_user(user_id):
     cursor = cnx.cursor()
 
-    cursor.execute("SELECT * FROM quiz WHERE ownerId = %s", (user_id,))
+    cursor.execute("SELECT id, name FROM quiz WHERE ownerId = %s", (user_id,))
     quiz_rows = cursor.fetchall()
 
     quizzes = []
-    for quiz_row in quiz_rows:
-        quiz_id = quiz_row[0]
-        quiz = get_quiz(quiz_id)
-        quizzes.append(quiz)
+    for row in quiz_rows:
+        quizzes.append({
+            'id': row[0],
+            'name': row[1]
+        })
 
     cursor.close()
     return quizzes
@@ -280,7 +282,6 @@ def submit_quiz(quiz_id):
 #  My profile page where quizzes are displayed  #
 # --------------------------------------------- #
 
-
 @app.route('/profile')
 def profile():
     try:
@@ -295,7 +296,9 @@ def profile():
 
         # ? IF there is time implement different messages
 
-        return render_template('profile.html', quizzes=quizzes)
+        print(quizzes)
+
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id))
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
