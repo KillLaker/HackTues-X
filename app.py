@@ -253,7 +253,6 @@ def submit_quiz(quiz_id):
                 selected_options.append(value)
 
     post_request_text = '\n'.join(selected_options)
-    #! test this i have no idea if that is the right way to do it - Stily
     try:
         token = session['token']
         json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')

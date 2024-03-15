@@ -29,8 +29,12 @@
         <script>
             let inputFile = document.getElementById('file-field');
             let fileNameField = document.getElementById('chosen-file-name');
+            let submitButton = document.getElementById('submit-field-label')
+
             inputFile.addEventListener('change', event => {
                 fileNameField.textContent = event.target.files[0].name
+                submitButton.style.borderStyle = "dashed";
+                submitButton.style.borderColor = "lightgrey";
             })
         </script>
     </body>

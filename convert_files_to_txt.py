@@ -2,7 +2,9 @@ import os
 from tika import parser
 
 def convert_file_to_text(file_path):
-    if file_path.endswith('.docx') or file_path.endswith('.pptx') or file_path.endswith('.pdf'):
+    if file_path.endswith('.txt'):
+        pass
+    elif file_path.endswith('.docx') or file_path.endswith('.pptx') or file_path.endswith('.pdf'):
         parsed = parser.from_file(file_path)
         text = parsed['content']
         cleaned_text = remove_extra_newlines(text)
