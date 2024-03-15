@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="../static/styles/quiz.css">
-        <link rel="stylesheet" href="../static/styles/nav.css">
-        <title>Quiz</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/quiz.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/nav.css') }}">
+        <title>Quiztics - Look how you did</title>
     </head>
     <body>
         <div class="topnav" id="myTopnav">
@@ -19,26 +19,26 @@
 
         <div class="main-page">
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
-                <h1>Quiz</h1>
+                <h1>Quiz - Answers</h1>
+                <h2>You got {{ num_correct }} out of {{ total_questions }} correct</h2>
             </div>
             <form class="w-70 text-center" action = "/quiz/{{ quiz_id }}/submit" method = "post">
-                {% set questionCounter = namespace(value=1) %}
+                {% set ns = namespace(counter=0) %}
                 {% for question in quiz %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
                         <h2>{{ question.question }}</h2>
-                        {% set ns = namespace(counter=0) %}
+                        {% set index_ns = namespace(index=0) %}
                         {% for answer in question.answers %}
-                            <div class="options">
-                                <input type="radio" name="question_{{ questionCounter.value }}" value="{{ 'ABCD'[ns.counter] }}" required>
+                            <div class="options {% if 'ABCD'[index_ns.index] == correct_options[ns.counter] %}correct{% endif %}">
+                                <input type="radio" name="question_{{ ns.counter+1 }}" value="{{ 'ABCD'[index_ns.index] }}" required {% if 'ABCD'[index_ns.index] == selected_options[ns.counter] %}checked{% endif %} disabled>
                                 <label>{{ answer }}</label>
                             </div>
                             <br>
-                            {% set ns.counter = ns.counter + 1 %}
+                            {% set index_ns.index = index_ns.index + 1 %}
                         {% endfor %}
-                        {% set questionCounter.value = questionCounter.value + 1 %}
                     </div>
+                    {% set ns.counter = ns.counter + 1 %}
                 {% endfor %}
-                <input class="button-poligon" type="submit" value="Submit">
             </form>
         </div>
         <div class="footer">
