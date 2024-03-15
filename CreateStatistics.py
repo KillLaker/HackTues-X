@@ -43,8 +43,7 @@ def check_question_answers(question_answers, correct_answers):
         else:
             incorrect += 1
     return correct, incorrect
-
-if __name__ == '__main__':
+def create_diagram():
     root = Tk()
     root.title("Test statistics")
     root.iconbitmap('statistics.png')
