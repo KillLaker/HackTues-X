@@ -11,12 +11,14 @@
         </div>
         <div class="main-content">
             {% for i in range(statistics_files|length) %}
+            {% if i < quiz|length %}
             <div class="quiz-item">
                 <h2>Question: {{ quiz[i]['question'] }}</h2>
                 <div class="image-options">
                     <img src="{{ statistics_files[i] }}" alt="Statistic" class="option-image">
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
             <h2>Student diagrams</h2>
             <div class="quiz-item-2">

@@ -349,8 +349,6 @@ def get_statistics(quiz_id):
         flash("Either no account detected or session expired!")
         return redirect(url_for('login'))
 
-    from flask import url_for
-
     diagrams_files = [url_for('static', filename=f"Diagrams/{file}") for file in os.listdir('static/Diagrams') if file.endswith('.png')]
     statistics_files = [url_for('static', filename=f"Statistics/{file}") for file in os.listdir('static/Statistics') if file.endswith('.png')]
     
