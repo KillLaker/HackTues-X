@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+body {
+    display: flex;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    flex-direction: column;
+    color: white;
+    background: rgb(64,26,74);
+    background: linear-gradient(90deg, rgba(64,26,74,1) 0%, rgba(2,0,36,1) 50%, rgba(65,20,77,1) 100%);
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    width: 75%;
+    margin: 20px auto;
+    color: white;
+}
+
+.main-title {
+    margin-bottom: 30px;
+}
+
+.quiz-item {
+    background-color: #5712905a;
+    border-radius: 10px;
+    padding: 20px 40px;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1em;
+    width: 100%;
+    max-width: 700px;
+    border: 1px solid white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.image-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.option-image {
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.option-image:hover {
+    transform: scale(1.05);
+}
