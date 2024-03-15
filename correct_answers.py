@@ -1,6 +1,7 @@
 import os
 
-def read_correct_answers(directory):
+def read_correct_answers(directory, quiz_id):
+    filename = f"{quiz_id}_correct_answers.txt"
     filename = "1_correct_answers.txt"
     dir = os.path.dirname(__file__)
     dir = dir.replace('\\', '/')

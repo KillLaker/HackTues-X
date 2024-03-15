@@ -62,7 +62,7 @@ def create_statistics(quiz_id):
     root.geometry('800x400')
 
     answer_directory = f'/Student_answers/correct_answers/{quiz_id}_correct_answers'
-    correct_answers = c_a.read_correct_answers(answer_directory)
+    correct_answers = c_a.read_correct_answers(answer_directory, quiz_id)
 
     student_answers = s_a.get_student_answers('Student_answers', quiz_id)
     number_of_questions = len(student_answers[0][1])
