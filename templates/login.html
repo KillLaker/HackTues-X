@@ -19,10 +19,7 @@
     {% if trigger_alert %}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-            {#// Use setTimeout to delay the alert by a certain amount of time (in milliseconds)#}
-            {#setTimeout(function() {#}
-            {#    alert('This alert will appear after 3 seconds.');#}
-            {#, 3000); // 3000 milliseconds = 3 seconds#}
+            setTimeout(function(){alert('This alert will appear after 3 seconds.')}, 3000);
                 alert("Either no account detected or session expired!")
             });
         </script>
