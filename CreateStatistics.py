@@ -51,7 +51,8 @@ def count_answers(data, num_questions):
     answer_counts = [{} for _ in range(num_questions)]
     for _, answers in data:
         for i, answer in enumerate(answers):
-            answer_counts[i][answer] = answer_counts[i].get(answer, 0) + 1
+            if i < num_questions:
+                answer_counts[i][answer] = answer_counts[i].get(answer, 0) + 1
     return answer_counts
 
 
@@ -64,7 +65,7 @@ def create_statistics(quiz_id):
     answer_directory = f'/Student_answers/correct_answers/{quiz_id}_correct_answers'
     correct_answers = c_a.read_correct_answers(answer_directory, quiz_id)
 
-    student_answers = s_a.get_student_answers('Student_answers', quiz_id)
+    student_answers = s_a.get_student_answers('Student_answers/combined/', quiz_id)
     number_of_questions = len(student_answers[0][1])
     number_of_answers = count_answers(student_answers, number_of_questions)
     print(number_of_answers)

@@ -299,7 +299,7 @@ def submit_quiz(quiz_id):
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as f:
         f.write(post_request_text)
-
+    directory = "Student_answers/combined/"
     combine_student_answers(directory)
 
     quiz = get_quiz(quiz_id)
