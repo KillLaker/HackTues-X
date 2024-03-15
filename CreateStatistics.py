@@ -80,7 +80,7 @@ def create_statistics(quiz_id):
     # print("aaa", student_answers)
     for i, (student_id, answers) in enumerate(student_answers, start=1):
         correct_count, incorrect_count = check_question_answers(answers, correct_answers)
-        save_path_diagrams = os.path.dirname(__file__) + f'/Diagrams/diagrams_{student_id}.png'
+        save_path_diagrams = os.path.dirname(__file__) + f'/static/Diagrams/diagrams_{student_id}.png'
         answers_fidelity(correct_count, incorrect_count, save_path_diagrams, i, student_id)
 
     for i, counts in enumerate(answerrs, start=1):
@@ -94,7 +94,7 @@ def create_statistics(quiz_id):
         plt.xlabel('Answers')
         plt.ylabel('Count')
 
-        save_path_statistics = os.path.dirname(__file__) + f'/Statistics'
+        save_path_statistics = os.path.dirname(__file__) + f'/static//Statistics'
         if not os.path.exists(save_path_statistics):
             os.makedirs(save_path_statistics)
 
@@ -104,6 +104,6 @@ def create_statistics(quiz_id):
         print(f'Saved histogram for Question {i} at: {save_path}')
 
 #test
-create_statistics('1')
-print("Histograms saved successfully!")
+# create_statistics('1')
+# print("Histograms saved successfully!")
 

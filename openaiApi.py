@@ -74,5 +74,5 @@ def generate_multiple_choice_questions():
 
     return questions
 
-generate_multiple_choice_questions()
+# generate_multiple_choice_questions()
 
