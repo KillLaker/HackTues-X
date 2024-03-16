@@ -181,12 +181,19 @@ def get_prev_quiz_id():
     cursor.execute("SELECT id FROM quiz ORDER BY id DESC LIMIT 1")
     quiz_id = cursor.fetchone()
     cursor.close()
-    return quiz_id[0]
+    if quiz_id:
+        return quiz_id[0]
+    else:
+        return None
 
 def insert_quiz(quiz, owner_id):
     cursor = cnx.cursor()
 
-    name = "Quiz " + str(get_prev_quiz_id() + 1)
+    name = "Quiz 1"
+
+    prevQuizId = get_prev_quiz_id()
+    if prevQuizId is not None:
+        name = "Quiz " + str(get_prev_quiz_id() + 1)
 
     cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (name, owner_id))
     quiz_id = cursor.lastrowid

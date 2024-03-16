@@ -1,388 +1,183 @@
-TUES11SW-VMKS-2 semester Lecture 1
-
-Аналогов вход и АЦП
-ВМКС II срок лекция 1
-
-Аналогови сигнали
-
-2
-
-- Всички сигнали в природата са аналогови по своята същност.
-- Те са непрекъснати във времето (във всеки момент от времето те имат 
-
-някаква стойност).
-- Звук, светлина, дим, цветоусещане, топлоусещане, аромат…. 
-- Радиовълните в ефира също са аналогови ! 
-- В сравнение с цифровите сигнали, които представят информацията като 
-
-дискретни стойности (нули и единици), аналоговите сигнали предават по-
-голям обем информация, но са по-податливи на шум и загуба на 
-качество при предаване.
-
-Аналогово цифрово преобразуване
-
-3
-
-- Всички устройства, които съхраняват и обработват
-информация работят с цифрови сигнали.
-
-- Това налага необходимостта от аналогово - цифрово преобразуване и 
-устройствата, които го осъществяват се наричат аналогово - цифрови 
-преобразуватели. Съкратено: АЦП (ADC на английски)
-
-- ADC ни позволява да конвертираме аналогови данни от реалния свят, 
-като аудио, видео, температура или показания на сензори, в цифров 
-формат, който може да бъде манипулиран от компютри и цифрови 
-системи.
-
-Аналогов вход и АЦП
-
-4
-
-- В почти всеки микроконтролер днес има по няколко аналогови входа.
-- Това на практика представляват АЦП-та вградени като част от 
-
-микроконтролерна архитектура.
-- АЦП могат да се намерят и като дискретни (самостоятелни) компоненти, 
-
-които да се интегрират в различни приложения.
-- Звукова карта
-- CCD матрица
-- Микрофон
-
-- Примери за ADC, като самостоятелни компоненти: 
-https://www.ti.com/data-converters/adc-circuit/products.html#84=20%3B32&sort=8
-4;desc& 
-
-https://www.ti.com/data-converters/adc-circuit/products.html#84=20%3B32&sort=84;desc&
-https://www.ti.com/data-converters/adc-circuit/products.html#84=20%3B32&sort=84;desc&
-
-Аналогов интерфейс в Ардуино (ATmega328P)
-
-5
-
-- От спецификацията на ATmega328P: Източник , раздел 23, страница 205 
-
-https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf
-
-Аналогов интерфейс в Ардуино (ATmega328P)
-
-6
-
-- От спецификацията на ATmega328P: Източник , раздел 23, страница 206 
-
-Още по-oпростена блокова диаграма
-
-https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf
-
-Как работи АЦП ?
-
-7
-
-- 3 основни етапа на аналогово - цифровото преобразуване
-- 1. Дискретизация по време
-- 2. Квантуване по ниво
-- 3. Кодиране в двоичен код
-
-3
-
-1 2
-
-Основни параметри на АЦП
-
-8
-
-- Опорно напрежение VREF, [V]. Това е напрежението спрямо, което се сравнява 
-аналоговият сигнал в процесa на преобразуване. Аналоговите сигнали, които АЦП ще 
-обработва могат да са с амплитуда ≦ VREF. Това напрежение трябва да бъде с много 
-висока точност.
-
-- Разрядност(разделителна способност) n, [bits]. Целият обхват на 
-входното напрежение 0V(илиVa
-
-gnd)  до VREF е разделен на няколко поддиапазона, които 
-може да наречем стъпки. За всяка стъпка се присвоява единичен изходен цифров код. 
-Една стъпка се нарича още LSB (най-малко значим бит) и броят на тези стъпки 
-обикновено са в степени на две (2n). Тук n се нарича разделителна способност на ADC, 
-а 2n осигурява броя на стъпките. 
-
-*Va
-gnd - аналогово референсно “нулево” напрежение на АЦП. То определя 
-
-минималното напрежение, което може да се измери. В някои приложения може да е 
-различно от 0V !
-
-Основни параметри на АЦП зависещи от разредността 
-и VREF
-
-9
-
-- Грешка от квантуване: Несъответствието между истинската аналогова стойност и 
-нейното цифрово представяне е известно като грешка от  квантуване. Възможно е по-
-прецизно квантуване при по-високи разделителни способности, което намалява тази 
-грешка.
-
-- Динамичен диапазон, [dB]: това е съотношението на най-големите към най-
-малките сигнали, които могат да бъдат прецизно измерени и е тясно свързан с 
-разделителната способност. ADC може да открие малки промени, когато има силни 
-сигнали, благодарение на по-голяма разрядност, която води до по-голям динамичен 
-диапазон.
-
-- Отношение сигнал/шум SNR, [dB]: По-високата разделителна способност 
-повишава SNR, тъй като нивото на шума, предизвикано от грешката от квантуване, се 
-намалява. Но има и други фактори, които влияят на това отношение (като например 
-собствения шум на АЦП).
-
-Основни параметри на АЦП
-
-10
-
-- Честота на дискретизация (sampling rate/ sampling frequency), [SPS 
-или Hz]: Този параметър показва скоростта на преобразуване на аналоговите данни 
-от аналогов в цифров формат. Измерва се в samples per second или в Hz. Честотата на 
-дискретизация определя честотната лента, в която може да бъде точно преобразуван  
-аналоговият сигнал. Колкото по-голяма е честотата на дискретизация, толкова по-точно 
-можем да преобразуваме даден сигнал. Важно е да се знае, че честотата на 
-дискретизация е ограничаващ фактор за сигналите които можем да обработваме.
-За коректно преобразуване на аналогов сигнал трябва да е изпълнено условието на 
-Найкуист:
-
-Fs ≧ 2 x B 
-Където Fs  e честотата на дискретизация а B е честотната лента на сигнала.
-
-- Коефициент на нелинейни изкривявания (THD): измерва нелинейните 
-изкривявания при преобразуване на аналогови сигнали. По-ниските стойности на THD 
-водят до по-добра точност.
-
-Основни параметри на АЦП
-
-11
-
-- Ефективен брой битове (ENOB), [n] : Броят на битовете в идеален ADC със 
-същата разделителна способност като тествания ADC се обозначава с ENOB. Той 
-измерва реалната разделителна способност на ADC, когато се вземат предвид нивата 
-на шум и нелинейни изкривявания.
-
-- Интегрална нелинейност (INL):INL измерва отклонението от идеалния линеен 
-отклик на ADC в процеса на квантуване.
-
-- Диференциална нелинейност(DNL): DNL измерва разликата между идеалния 
-размер на стъпката и действителния размер на стъпката на ADC.
-
-- Грешка от отместване на нулата(offset error): дефинира се като отклонение 
-на действителната трансферна функция на ADC от перфектната ADC трансферна 
-функция в точката на нула към прехода, измерен в LSB бита.
-
-- За повече информация и още параметри: 
-https://ww1.microchip.com/downloads/en/Appnotes/atmel-8456-8-and-32-bit-avr-microcontroll
-ers-avr127-understanding-adc-parameters_application-note.pdf 
-
-https://ww1.microchip.com/downloads/en/Appnotes/atmel-8456-8-and-32-bit-avr-microcontrollers-avr127-understanding-adc-parameters_application-note.pdf
-https://ww1.microchip.com/downloads/en/Appnotes/atmel-8456-8-and-32-bit-avr-microcontrollers-avr127-understanding-adc-parameters_application-note.pdf
-
-Грешка от отместване на нулата (offset error)
-
-12
-
-✭Грешката от отместване ограничава наличният диапазон на АЦП. Голяма грешка при положително 
-отместване води до насищане на изхода, преди входното напрежение да достигне максимум на диапазона. 
-Голяма грешка при отрицателно отместване дава изходна стойност 000 за най-ниските входни напрежения.
-
-Диференциална нелинейност(DNL)
-
-13
-
-✭Диференциалната нелинейност (DNL) се определя като максималната и минималната разлика в ширината на 
-стъпката между действителната трансферна функция и идеалната трансферна функция. Нелинейността води 
-до квантуване със стъпка, която има променлив размер.
-
-Интегрална нелинейност (INL)
-
-14
-
-✭Интегралната нелинейност (INL) се определя като максималната вертикална разлика между действителната и 
-идеалната крива. Той показва степента на отклонение на действителната крива от идеалната крива на 
-трансфер. INL може да бъде интерпретиран като сбор от DNL.
-
-Типове АЦП
-
-15
-
-- Flash ADCs
-
-- SAR ADCs
-
-- Pipeline ADCs
-
-- Delta-Sigma ADCs
-
-- Integrating ADCs
-
-Sample and hold circuit
-
-16
-
-Flash ADC
-
-17
-
-- Най-бързите АЦП
-- Най-сложните
-- Трудно се постига голяма резолюция
-- Висока консумация на енергия
-- Прости като архитектура, но сложни 
-
-за реализация на голяма разрядност
-- Консумират много енергия
-- Изградени са от 2n - 1 компаратори, 
-
-резисторна стълба, XOR елементи и 
-енкодер към двоичен код
-
-- Намират приложение при обработка 
-на високоскоростни данни и видео
-
-More info: Flash ADC
-
-https://www.monolithicpower.com/en/analog-to-digital-converters/detailed-analysis-of-adc-architectures/flash-adcs
-
-SAR ADC (Successive Approximation Register)
-
-18
-
-- Изградени са от Sample/Hold 
-верига, компаратор, ЦАП, SAR с 
-обратна връзка
-
-- С тях лесно се постига средна до 
-висока резолюция
-
-- Лесни са за реализация
-- Поддържат средни скорости на 
-
-обработка
-- Ниска до средна консумация на 
-
-енергия
-- Използват се масово в 
-
-микроконтролери и приложения 
-свързани със сензори
-
-More info: SAR ADC
-
-✭Терминът "последователно приближение" се отнася до итеративния метод, използван от ADC за 
-оценка на аналоговото входно напрежение. Той работи, като постепенно усъвършенства своята 
-апроксимация на стъпки, като всеки път се доближава до действителното входно напрежение.
-
-https://www.monolithicpower.com/en/analog-to-digital-converters/detailed-analysis-of-adc-architectures/sar-adcs
-
-Pipeline ADC
-
-19
-
-More info: Pipeline ADC 1
-   Pipeline ADC 2
-
-- Изградени са от няколко каскадно 
-свързани АЦП блока
-
-- Съдържат много Flash ADC 
-блокове и ЦАП
-
-- Имат и логически блок за корекция 
-на грешката от преобразуване 
-(блок за калибрация)
-
-- Много бързи, но не колкото Flash
-- Много сложни
-- Много точни
-- Много скъпи
-- С голяма консумация на енергия
-- С голяма разрядност
-
-https://people.ece.umn.edu/~harjani/courses/8331/ADC-pipeline_lecture.PDF
-https://www.analog.com/en/resources/technical-articles/understanding-pipelined-adcs.html
-
-Delta-Sigma ADC
-
-20
-
-More info:Delta -Sigma ADC 1
-  Delta -Sigma ADC 2
-
-- Използват техники за 
-цифрова обработка на 
-сигнала(DSP), за да 
-намаляват нивото на шума
-
-- Поради структурата си 
-постигат изключително висока 
-резолюция
-
-- Не са особено бързи
-- Най-сложна архитектура
-- Средна консумация на 
-
-мощност
-
-✭Този модулатор е съставен от отрицателна 
-обратна връзка, включваща интегратор, 
-компаратор и 1-битов ЦАП(DAC). 
-Интеграторът акумулира несъответствията 
-между входния сигнал и изхода на 1-битовия 
-DAC. После компараторът проверява този 
-интегриран изход спрямо референтно 
-напрежение. Резултатът се преобразува в 1-
-битов поток от данни, който след това се 
-връща обратно чрез 1-битов DAC, затварящ 
-итеративната верига за обратна връзка.
-
-https://www.monolithicpower.com/en/analog-to-digital-converters/detailed-analysis-of-adc-architectures/delta-sigma-adcs
-https://www.ti.com/lit/an/slyt423a/slyt423a.pdf?ts=1707116308868&ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FMSP430F67751#:~:text=The%20design%20of%20delta%2Dsigma,from%20DC%20to%20several%20megahertz.
-
-21
-
-Integrating ADC
-- Добро шумопотискане и 
-
-филтрация
-- Висока резолюция
-- Най-висока линейност
-- Ниско бързодействие
-- Ниска консумация на енергия
-- Ниска сложност
-- Използват се най-вече в 
-
-измервателна апаратура 
-(мултицети, LC измерватели)
-
-- Много са устойчиви на 
-температурни промени
-
-More info: Integrating ADC
-
-✭Думата "интегриране" означава 
-сумиране на входния сигнал. Този 
-тип АЦП добавя или комбинира 
-входния сигнал за зададено време, 
-за да направи стойност, която 
-съответства на входа. При пълно 
-съвпадение, тази добавена 
-стойност се превръща в цифрова 
-стойност
-
-https://www.monolithicpower.com/en/analog-to-digital-converters/detailed-analysis-of-adc-architectures/integrating-adcs
-
-Задачи свързани с АЦП в Ардуино
-
-22
-
-1. Изчислете LSB за АЦП на ATmega 328P, при следните параметри
-a. Разрядност 10 bit
-b. VREF = 5 V
-
-2. Изчислете динамичния диапазон в dB.
-
-3.⭐ Изчислете каква ще е цифровата стойност, преобразувана от АЦП за 
-напрежение 3.3VDC. А за напрежение 6V ?
+Cyber Attack Prevention
+
+A cyber attack is a malicious and deliberate attempt by cybercriminals to disrupt, degrade, or gain unauthorized access to a computer system or network using various techniques and tools. These attacks can range from simple phishing attempts to more sophisticated and coordinated assaults that exploit vulnerabilities in software or hardware. Common targets of cyber attacks include personal email accounts and financial information, as well as government departments and other organizations that hold sensitive data. Additionally, cyber attackers may seek to exfiltrate, corrupt, or destroy valuable data and disrupt the normal functioning of targeted systems.
+
+1. Advanced tips for cyber protection:
+· Implement robust password hygiene by utilizing complex and unique passphrases that contain a combination of uppercase and lowercase letters, numerals, and special characters. Avoid using easily guessable information such as personal information in your passwords.
+· Adopt a defense-in-depth approach by deploying spam filters to block unwanted emails, phishing attempts, and malicious attachments.
+· Regularly perform data backups to preserve critical files and information in case of data loss or corruption.
+· Exercise caution when browsing the internet and only visit reputable websites. To prevent unwanted ads and malicious scripts, utilize browser extensions such as pop-up blockers and ad-blockers.
+· Clear your browsing history and cache to prevent malicious actors from tracking your online activity and exploiting stored cookies.
+· Be vigilant when receiving unsolicited emails or messages from unknown sources and avoid opening attachments or clicking on links from untrusted sources.
+· Power off or hibernate your devices when not in use to prevent unauthorized access and minimize the attack surface.
+Note: The above tips can help to protect you from various types of cyber threats but it is still possible to experience a cyber attack despite taking these precautions. It's important to stay informed about the latest threats and trends in cybersecurity and continuously monitor your systems for signs of compromise.
+
+2. Firewalls are a critical component of an organization's security architecture, serving as a first line of defense against cyber attacks. They carefully inspect and monitor incoming network traffic by applying predefined security rules and policies, and filter out malicious or anomalous traffic from untrusted or unsecured sources.
+Firewalls operate at the network layer, typically at the boundary of a private network and the internet, and provide a barrier between internal and external networks by regulating access to specific ports and services.
+Firewalls can be implemented in both hardware and software forms, with hardware firewalls being deployed as dedicated appliances that sit at the network perimeter and software firewalls being integrated into endpoint devices such as laptops and servers.
+For optimal security, it is recommended to have both types of firewalls in place, as a combination of both hardware and software firewalls can provide a more comprehensive and robust defense against cyber threats.
+
+3. Types of software firewalls:
+
+Network address translation (NAT) firewalls provide an additional layer of security by obscuring the internal IP addresses of devices on a network from external actors. By using NAT, multiple devices can share a single public IP address, which makes it more difficult for attackers to gain access to a specific device by IP address scanning. This feature also helps to minimize the attack surface of a network by hiding internal IP addresses and making it more challenging for an attacker to identify exploitable vulnerabilities.
+
+Stateful multilayer inspection (SMLI) firewalls are advanced firewall technologies that provide robust security by performing deep packet inspection at multiple layers of the OSI model. SMLI firewalls inspect and analyze incoming network traffic at the network, transport, and application layers, comparing the packets against a database of known trusted packets. The firewall only allows packets to pass if they pass each layer individually, which increases the firewall's ability to detect and block malicious traffic. This method of inspection adds another layer of security by verifying the authenticity and integrity of the packet and its contents, enabling the firewall to detect and prevent advanced threats such as malware and zero-day exploits.
+4. Antivirus anti-spyware package
+
+An antivirus and an anti-spyware solution is a type of software that serves as a protective measure against various forms of malicious software, including viruses, malware, and spyware. Antivirus software employs signature-based and heuristic-based detection methods to scan and identify known malicious code on a system and take appropriate remediation actions, such as quarantining or deleting the detected threat. Anti-spyware software, on the other hand, is specifically engineered to detect and eliminate spyware, a category of malware that is designed to secretly gather information about the user or the system or to control the system's behavior without the user's knowledge or consent.
+Both antivirus and anti-spyware software can be integrated with a host-based intrusion prevention system (HIPS) which creates a more robust defense against cyber threats by monitoring system activity, identifying and blocking malicious behavior, and providing real-time protection.
+It is essential to keep the software updated and active to ensure maximum protection and coverage against the latest threats.
+
+5. Virtualization as Security Mitigation Technique
+
+Navigating untrusted or malicious websites can expose a system to many cyber threats, including malware, spyware, and viruses. While one of the most effective ways to avoid such browser-borne intrusions is to avoid visiting potentially unsafe sites, virtualization can provide an additional layer of security by allowing the execution of a browser in a virtualized environment. This approach, also known as sandboxing, isolates the browser's activity from the host operating system, effectively containing any potential malware or malicious payloads, and preventing them from propagating to the underlying system.
+Virtualization solutions such as Parallels and VMware Fusion, enable users to create virtual machines that run on top of the host operating system, providing a dedicated and isolated environment for executing applications and browsing the web. This technique allows for a more secure browsing experience by compartmentalizing any potential threats and reducing the attack surface of the host operating system.
+Additionally, Virtualization technology is also used to segregate sensitive data and applications in a different environment, allowing for more secure and controlled access to sensitive data, and allowing for easy rollback and recovery in case of a security incident.
+
+6. Disable Autocomplete for Enhanced Privacy and Security
+Autocomplete is a feature that automatically saves and suggests previously entered data, such as passwords, login credentials, and other sensitive information, in a browser for the convenience of the user. However, this feature can pose a significant security risk if the device is lost or stolen, as it can potentially enable unauthorized access to sensitive data.
+Additionally, autocomplete can also store information about your browsing history and search queries, which can be used to track your online activity and compromise your privacy.
+To mitigate these risks, it is advisable to disable autocomplete on all web browsers, by going to the browser's settings and disabling the feature. This can help to protect your personal information and reduce the risk of unauthorized access, and prevent your online activity from being tracked by malicious actors. Additionally, it's important to regularly clear your browser history, cache, and cookies to prevent malicious actors from exploiting stored data.
+Another way to increase security is to use password manager tools that can store passwords in an encrypted format and automatically populate the fields, without saving the information on the browser.
+1
+
+1
+ 
+ 
+Cyber 
+A
+ttack 
+P
+revention
+ 
+ 
+A cyber attack
+ 
+is a malicious and deliberate attempt by cybercriminals to 
+disrupt, degrade, or gain unauthorized access to a computer system or 
+network using various techniques and tools. These attacks can range from 
+simple phishing attempts to more sophisticated and co
+ordinated assaults 
+that exploit vulnerabilities in software or hardware. Common targets of 
+cyber attacks include personal email accounts and financial information, 
+as well as government departments and other organizations that hold 
+sensitive data. Addition
+ally, cyber attackers may seek to exfiltrate, corrupt, 
+or destroy valuable data and disrupt the normal functioning of targeted 
+systems.
+ 
+ 
+1.
+ 
+Advanced tips for cyber protection:
+ 
+?
+ 
+Implement robust 
+password hygiene
+ 
+by utilizing complex and 
+unique passphrases that 
+contain a combination of uppercase and 
+lowercase letters, numerals, and special characters. Avoid using 
+easily guessable information such as personal information in your 
+passwords.
+ 
+?
+ 
+Adopt a defense
+-
+in
+-
+depth approach by 
+deploying spam filters
+ 
+to 
+block unwant
+ed emails, phishing attempts, and malicious 
+attachments.
+ 
+?
+ 
+Regularly perform 
+data backups
+ 
+to preserve critical files and 
+information in case of data loss or corruption.
+ 
+?
+ 
+Exercise caution when browsing the internet and only visit reputable 
+websites. 
+To prevent
+ 
+unwanted ads and malicious scripts, utilize 
+browser extensions such as pop
+-
+up blockers and ad
+-
+blockers
+.
+ 
+?
+ 
+Clear your browsing history
+ 
+and cache to prevent malicious 
+actors from tracking your online activity and exploiting stored 
+cookies.
+ 
+?
+ 
+Be vigilant when 
+receiving unsolicited emails or messages from 
+unknown sources and avoid opening attachments or clicking on 
+links from untrusted sources.
+ 
+?
+ 
+Power off or hibernate your devices
+ 
+when not in use to prevent 
+unauthorized access and minimize the attack surface.
+ 
+
+/docProps/thumbnail.emf
+
+1 
+ 
+Cyber Attack Prevention 
+ 
+A cyber attack is a malicious and deliberate attempt by cybercriminals to 
+disrupt, degrade, or gain unauthorized access to a computer system or 
+network using various techniques and tools. These attacks can range from 
+simple phishing attempts to more sophisticated and coordinated assaults 
+that exploit vulnerabilities in software or hardware. Common targets of 
+cyber attacks include personal email accounts and financial information, 
+as well as government departments and other organizations that hold 
+sensitive data. Additionally, cyber attackers may seek to exfiltrate, corrupt, 
+or destroy valuable data and disrupt the normal functioning of targeted 
+systems. 
+ 
+1. Advanced tips for cyber protection: 
+? Implement robust password hygiene by utilizing complex and 
+unique passphrases that contain a combination of uppercase and 
+lowercase letters, numerals, and special characters. Avoid using 
+easily guessable information such as personal information in your 
+passwords. 
+? Adopt a defense-in-depth approach by deploying spam filters to 
+block unwanted emails, phishing attempts, and malicious 
+attachments. 
+? Regularly perform data backups to preserve critical files and 
+information in case of data loss or corruption. 
+? Exercise caution when browsing the internet and only visit reputable 
+websites. To prevent unwanted ads and malicious scripts, utilize 
+browser extensions such as pop-up blockers and ad-blockers. 
+? Clear your browsing history and cache to prevent malicious 
+actors from tracking your online activity and exploiting stored 
+cookies. 
+? Be vigilant when receiving unsolicited emails or messages from 
+unknown sources and avoid opening attachments or clicking on 
+links from untrusted sources. 
+? Power off or hibernate your devices when not in use to prevent 
+unauthorized access and minimize the attack surface. 
