@@ -152,9 +152,7 @@ def get_uploaded_file():
 
     app.config['UPLOAD_FOLDER'] = './static/uploads/'
 
-    #! Uncomment when ready 
-    quiz = generate_multiple_choice_questions()
-    insert_quiz(quiz, student_id)
+    #! Uncomment when ready
 
     filename = secure_filename(uploaded_file.filename)
     uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'quiz-source.{filename.split(".")[-1]}'))
@@ -162,6 +160,9 @@ def get_uploaded_file():
 
     with open(os.path.join(app.config['UPLOAD_FOLDER'], 'quiz-source.txt'), 'w', encoding="utf-8") as f:
         f.write(text)
+
+    quiz = generate_multiple_choice_questions()
+    insert_quiz(quiz, student_id)
 
     return redirect(url_for('profile'))
 

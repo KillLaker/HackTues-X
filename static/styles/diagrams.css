@@ -51,6 +51,7 @@ body {
     overflow-y: hidden;
     transition: transform 0.2s;
 }
+
 .image-options {
     display: flex;
     flex-wrap: wrap;
