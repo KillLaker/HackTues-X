@@ -287,6 +287,73 @@ def quiz(quiz_id):
         return "Quiz not found", 404
     return render_template('quiz.html', quiz_name=quiz_name,  quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
+
+@app.route("/quiz_edit/<int:quiz_id>", methods=['POST'])
+def edit_quiz(quiz_id):
+    try:
+        if 'token' not in session:
+            return redirect(url_for('login', trigger_alert = True))
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session")
+        return redirect(url_for('login', trigger_alert = True))
+
+    if request.method == 'POST':
+        quiz_name = request.form['quiz_name']
+        updated_quiz = request.form.getlist('updated_quiz')
+        #new_question_text = request.form['new_question_text']
+        #new_option_text = request.form['new_option_text']
+
+        if update_quizDB(quiz_name, updated_quiz):
+            flash("Quiz updated successfully")
+        else:
+            flash("Quiz updated failed")
+
+        return redirect(url_for('quiz', quiz_id=quiz_id))
+
+    else:
+        quiz_name, quiz = get_quiz(quiz_id)
+        if quiz is None:
+            return "Quiz not found", 404
+
+        return render_template('quiz_editor.html', quiz_name=quiz_name, quiz=quiz, quiz_id=quiz_id,
+                               is_logged_in=session.get('token', False))
+
+def update_quizDB(quiz_id, updated_quiz):
+
+    cursor = cnx.cursor()
+
+    try:
+        cursor.execute("START TRANSACTION")
+
+        cursor.execute("DELETE FROM options WHERE question_id IN(SELECT id FROM questions WHERE quiz_id = %s)", (quiz_id,))
+        cursor.execute("DELETE FROM questions WHERE quiz_id = %s", (quiz_id,))
+
+        for question in updated_quiz:
+            # Insert question
+            cursor.execute("INSERT INTO questions (quiz_id, question_text) VALUES (%s, %s)",
+                           (quiz_id, question['question']))
+            question_id = cursor.lastrowid
+
+            # Insert options
+            for option_text in question['answers']:
+                is_correct = (option_text.upper() == question['right_answer'].upper())
+                cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)",
+                               (question_id, option_text, is_correct))
+
+        cnx.commit()
+
+        return True
+
+    except Exception as e:
+        cnx.rollback()
+        print("Error updating quiz : ", e)
+        return False
+
+    finally:
+        cursor.close()
+
+
+
 # --------------------------------------------- #
 #    Handles quiz submitting with generating a  #
 #    file in this format quizId_studentId.txt   #

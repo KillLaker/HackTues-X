@@ -30,8 +30,12 @@
         <div class="buttons">
         {% for quiz in quizzes %}
             <div class="quiz-buttons">
-                <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                {% if teacher %}
+                <a href="/quiz_edit/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
                 <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
+                {% else %}
+                <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                {% endif %}
             </div>
         {% endfor %}
         </div>
