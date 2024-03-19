@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../static/styles/quiz.css">
+        <link rel="stylesheet" href="../static/styles/nav.css">
+        <title>Quiz - Editor</title>
+    </head>
+    <body>
+        <div class="topnav" id="myTopnav">
+            <div class="nav-btns">
+                {% if is_logged_in %}
+                    <a href="/logout">Logout</a>
+                    <a class="b-w" href="/profile">Profile</a>
+                {% else %}
+                    <a class="b-w" href="/login">Login</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="main-page">
+            <div class="quiz-bubble w-50 text-center px-20 mx-20">
+                <h1>Quiz</h1>
+            </div>
+            <form class="w-70 text-center" action = "/quiz/{{ quiz_id }}/submit" method = "post">
+                {% set questionCounter = namespace(value=1) %}
+                {% for question in quiz %}
+                    <div class="text-left quiz-bubble mx-20 p-53015">
+                        <h2>{{ question.question }}</h2>
+                        {% set ns = namespace(counter=0) %}
+                        {% for answer in question.answers %}
+                            <div class="options">
+                                <input type="radio" name="question_{{ questionCounter.value }}" value="{{ 'ABCD'[ns.counter] }}" required>
+                                <label><input class = "question-answer" name = "question-answer" type = "text" value = "{{ answer }}"></label>
+                            </div>
+                            <br>
+                            {% set ns.counter = ns.counter + 1 %}
+                        {% endfor %}
+                        {% set questionCounter.value = questionCounter.value + 1 %}
+                    </div>
+                {% endfor %}
+                <input class="button-poligon" type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="footer">
+        </div>
+    </body>
+</html>
