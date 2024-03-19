@@ -19,7 +19,7 @@
 
         <div class="main-page">
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
-                <h1>Quiz - Answers</h1>
+                <h1>{{ quiz_name }} - Answers</h1>
                 <h2>You got {{ num_correct }} out of {{ total_questions }} correct</h2>
             </div>
             <form class="w-70 text-center" action = "/quiz/{{ quiz_id }}/submit" method = "post">

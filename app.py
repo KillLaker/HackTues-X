@@ -224,6 +224,7 @@ def get_quiz(quiz_id):
     if quiz_row is None:
         return None
 
+    quiz_name = quiz_row[1]
     quiz = []
 
     cursor.execute("SELECT * FROM questions WHERE quiz_id = %s", (quiz_id,))
@@ -243,7 +244,7 @@ def get_quiz(quiz_id):
         quiz.append(question)
 
     cursor.close()
-    return quiz
+    return quiz_name, quiz
 
 
 # ----------------------------------- #
@@ -281,10 +282,10 @@ def quiz(quiz_id):
         flash("Either no account detected or session expired!")
         return redirect(url_for('login', trigger_alert = True))
     
-    quiz = get_quiz(quiz_id)
+    quiz_name, quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
-    return render_template('quiz.html', quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
+    return render_template('quiz.html', quiz_name=quiz_name,  quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
 #    Handles quiz submitting with generating a  #
@@ -318,7 +319,7 @@ def submit_quiz(quiz_id):
         f.write(post_request_text)
     combine_student_answers(directory)
 
-    quiz = get_quiz(quiz_id)
+    quiz_name, quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
     
@@ -362,7 +363,7 @@ def get_statistics(quiz_id):
     
     CreateStatistics.create_statistics(quiz_id)
 
-    quiz = get_quiz(quiz_id)
+    quiz_name, quiz = get_quiz(quiz_id)
     print(quiz[1])
 
     return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files, quiz=quiz)

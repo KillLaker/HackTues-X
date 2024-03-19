@@ -94,17 +94,67 @@ input[type="radio"]:focus {
 .options label{
     margin-left: 10px;
     margin-top: -2px;
+    width: 100%;
 }
 
 .correct{
     color: green;
 }
 
-.question-answer {
+input[type="text"] {
     background: none;
     border: #742cb8 solid 2px;
     border-radius: 10px;
     font-size: 15px;
     color: white;
     padding-left: 5px;
+    width: 100%;
+}
+
+.question-edit {
+    display: block;
+    font-size: 1.5em;
+    margin: 0.83em 0;
+    font-weight: bold;
+}
+
+.save-options-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.save-options-button {
+    color: white;
+    font-size: 1.5em;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+    width: 320px;
+    height: 50px;
+    margin: 50px 0;
+}
+
+.save-button {
+    background-color: #571290;
+    border: none;
+}
+
+.save-button:hover {
+    background-color: #742cb8;
+}
+
+.cancel-button {
+    background: none;
+    border: #571290 solid 3px;
+}
+
+.cancel-button:hover {
+    background-color: rgba(197, 122, 252, 0.31);
+    border: none;
 }
