@@ -164,7 +164,8 @@ def get_uploaded_file():
         f.write(text)
 
     quiz = generate_multiple_choice_questions()
-    insert_quiz(quiz, student_id)
+    quiz_name = request.form.get('quiz-name')
+    insert_quiz(quiz_name, quiz, student_id)
 
     return redirect(url_for('profile'))
 
@@ -190,16 +191,16 @@ def get_prev_quiz_id():
     else:
         return None
 
-def insert_quiz(quiz, owner_id):
+def insert_quiz(quiz_name, quiz, owner_id):
     cursor = cnx.cursor()
+    #
+    # name = "Quiz 1"
+    #
+    # prevQuizId = get_prev_quiz_id()
+    # if prevQuizId is not None:
+    #     name = "Quiz " + str(get_prev_quiz_id() + 1)
 
-    name = "Quiz 1"
-
-    prevQuizId = get_prev_quiz_id()
-    if prevQuizId is not None:
-        name = "Quiz " + str(get_prev_quiz_id() + 1)
-
-    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (name, owner_id))
+    cursor.execute("INSERT INTO quiz (name, ownerId) VALUES (%s, %s)", (quiz_name, owner_id))
     quiz_id = cursor.lastrowid
 
     for i, q in enumerate(quiz):

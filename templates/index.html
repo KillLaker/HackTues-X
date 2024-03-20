@@ -1,69 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="../static/styles/style.css" />
-    <link
-      href="https://unpkg.com/css.gg@2.0.0/icons/css/import.css"
-      rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/styles/nav.css">
-  </head>
-  <body>
-    <div class="topnav" id="myTopnav">
-      <div class="nav-btns">
-          {% if is_logged_in %}
-              <a href="/logout">Logout</a>
-              <a class="b-w" href="/profile">Profile</a>
-          {% else %}
-              <a class="b-w" href="/login">Login</a>
-          {% endif %}
-      </div>
-    </div>
-
-    <div id="main-page">
-      <form
-        id="file-form"
-        method="post"
-        enctype="multipart/form-data"
-        action="/upload"
-        onsubmit="return onSubmitForm()"
-      >
-        <div class="input-information">
-          <div class="number-input">
-            <span>Choose number of questions:</span>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              value="10"
-              name="questions-number"
-            />
-          </div>
-          <input type="file" id="file-field" name="uploaded-file"/>
-          <label for="file-field" class="file-field-label">
-            <div class="import-button-content">
-              <img class="import-icon" src="../static/assets/import.png" />
-              <span>Import file</span>
+    <head>
+        <link rel="stylesheet" href="../static/styles/style.css" />
+        <link
+        href="https://unpkg.com/css.gg@2.0.0/icons/css/import.css"
+        rel="stylesheet"/>
+        <link rel="stylesheet" href="../static/styles/nav.css">
+    </head>
+    <body>
+        <div class="topnav" id="myTopnav">
+            <div class="nav-btns">
+                {% if is_logged_in %}
+                    <a href="/logout">Logout</a>
+                    <a class="b-w" href="/profile">Profile</a>
+                 {% else %}
+                      <a class="b-w" href="/login">Login</a>
+                {% endif %}
             </div>
-          </label>
         </div>
-        <br />
-        <div class="chosen-file">
-          <span>Chosen file: </span>
-          <span id="chosen-file-name">None</span>
-        </div>
-        <br />
-        <br />
-        <input type="submit" id="submit-field" />
-        <label for="submit-field" id="submit-field-label">Submit</label>
-        <div id="spinner" style="display: none;">Loading...</div>
-      </form>
-    </div>
-    <script>
-      let inputFile = document.getElementById("file-field");
-      let fileNameField = document.getElementById("chosen-file-name");
-      let submitButton = document.getElementById("submit-field-label");
 
-      let spinner = document.getElementById("spinner");
+        <div id="main-page">
+            <form id="file-form" method="post" enctype="multipart/form-data" action="/upload" onsubmit="return onSubmitForm()">
+                <div class="input-information">
+                    <div class = "name-input">
+                        <span>Choose name: </span>
+                        <input type = "text" name = "quiz-name">
+                    </div>
+                    <div class="number-input">
+                        <span>Choose number of questions:</span>
+                        <input type="number" min="1" max="20" value="10" name="questions-number"/>
+                    </div>
+                    <input type="file" id="file-field" name="uploaded-file"/>
+                    <label for="file-field" class="file-field-label">
+                        <div class="import-button-content">
+                            <img class="import-icon" src="../static/assets/import.png" />
+                            <span>Import file</span>
+                        </div>
+                    </label>
+                </div>
+                <br />
+                <div class="chosen-file">
+                    <span>Chosen file: </span>
+                    <span id="chosen-file-name">None</span>
+                </div>
+                <br />
+                <br />
+                <input type="submit" id="submit-field" />
+                <label for="submit-field" id="submit-field-label">Submit</label>
+                <div id="spinner" style="display: none;">Loading...</div>
+            </form>
+        </div>
+        <script>
+        let inputFile = document.getElementById("file-field");
+        let fileNameField = document.getElementById("chosen-file-name");
+        let submitButton = document.getElementById("submit-field-label");
+
+        let spinner = document.getElementById("spinner");
 
       inputFile.addEventListener("change", (event) => {
         fileNameField.textContent = event.target.files[0].name;
@@ -77,5 +69,5 @@
         return true;
       }
     </script>
-  </body>
+    </body>
 </html>

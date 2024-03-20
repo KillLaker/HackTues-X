@@ -52,6 +52,11 @@ body {
     transition: transform 0.2s;
 }
 
+.quiz-item-2::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
 .image-options {
     display: flex;
     flex-wrap: wrap;

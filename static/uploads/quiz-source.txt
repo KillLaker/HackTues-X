@@ -1,183 +1,234 @@
-Cyber Attack Prevention
+Authentication vs. Authorization
+Authentication vs. Authorization
+What's the difference between authentication and authorization? Authentication confirms that users are who they say they are. Authorization gives those users permission to access a resource.
+While authentication and authorization might sound similar, they are distinct security processes in the world of identity and access management (IAM).
+What Is Authentication?
+Authentication is the act of validating that users are whom they claim to be. This is the first step in any security process. 
+An authentication process is complete with:
+· Passwords - usernames and passwords are the most common authentication factors. If a user enters the correct data, the system assumes the identity is valid and grants access.
+· One-time pins - grant access for only one session or transaction.
+· Authentication apps - generate security codes via an outside party that grants access.
+· Biometrics - a user presents a fingerprint or eye scan to gain access to the system. 
+In some instances, systems require the successful verification of more than one factor before granting access. This multi-factor authentication (MFA) requirement is often deployed to increase security beyond what passwords alone can provide.
+What Is Authorization?
+Authorization in system security is the process of giving the user permission to access a specific resource or function. This term is often used interchangeably with access control or client privilege.
+Giving someone permission to download a particular file on a server or providing individual users with administrative access to an application are good examples of authorization.
+In secure environments, authorization must always follow authentication. Users should first prove that their identities are genuine before an organization’s administrators grant them access to the requested resources.
+Authentication vs. Authorization
+Despite the similar-sounding terms, authentication and authorization are separate steps in the login process. Understanding the difference between the two is key to successfully implementing an IAM solution.
+Let's use an analogy to outline the differences.
+Consider a person walking up to a locked door to provide care to a pet while the family is away on vacation. That person needs:
+· Authentication, in the form of a key. The lock on the door only grants access to someone with the correct key in much the same way that a system only grants access to users who have the correct credentials.
+· Authorization, in the form of permissions. Once inside, the person has the authorization to access the kitchen and open the cupboard that holds the pet food. The person may not have permission to go into the bedroom for a quick nap. 
+Authentication and authorization work together in this example. A pet sitter has the right to enter the house (authentication), and once there, they have access to certain areas (authorization).
+Systems implement these concepts in the same way, so it’s crucial that IAM administrators understand how to utilize both:
+· Authentication - Let every staff member access your workplace systems if they provide the right credentials in response to your chosen authentication requirements.
+· Authorization - Grant permission to department-specific files, and reserve access to confidential data, such as financial information, as needed. Ensure that employees have access to the files they need to do their jobs.
+The OpenID Connect (OIDC) protocol is built on the OAuth 2.0 protocol and helps authenticate users and convey information about them. The OAuth 2.0 protocol controls authorization to access a protected resource, like your web app, native app, or API service.
+The OAuth 2.0 protocol provides API security through scoped access tokens. OAuth 2.0 enables you to delegate authorization, while OIDC enables you to retrieve and store authentication information about your end users. OIDC extends OAuth 2.0 by providing user authentication and single sign-on (SSO) functionality.
+SSO - an authentication method that enables users to securely authenticate with multiple applications and websites by using just one set of credentials.
+The OAuth 2.0 spec has four important roles:
+· authorization server: The server that issues the access token.
+· resource owner: Normally your application's end user that grants permission to access the resource server with an access token.
+· client: The application that requests the access token and then passes it to the resource server.
+· resource server: Accepts the access token and must verify that it's valid. In this case, this is your application.
+Other important terms:
+· OAuth 2.0 grant: The authorization given (or granted) to the client by the user. Examples of grants are authorization code and client credentials.
+· access token: The token issued by the authorization server in exchange for the grant.
+· refresh token: An optional token that is exchanged for a new access token if the access token has expired.
+The usual OAuth 2.0 grant flow looks like this:
+1. Client requests authorization from the resource owner (usually the user).
+2. If the user gives authorization, the client passes the authorization grant to the authorization server.
+3. If the grant is valid, the authorization server returns an access token, possibly alongside a refresh and/or ID token.
+4. The client now uses that access token to access the resource server.
+OpenID Connect is an authentication standard built on top of OAuth 2.0. It adds an additional token called an ID token. OpenID Connect also standardizes areas that OAuth 2.0 leaves up to choice, such as scopes, endpoint discovery, and dynamic registration of clients.
+Although OpenID Connect is built on top of OAuth 2.0, the OpenID Connect specification uses slightly different terms for the roles in the flows:
+· OpenID provider: The authorization server that issues the ID token.
+· end user: The end user's information that is contained in the ID token.
+· relying party: The client application that requests the ID token.
+· ID token: The token issued by the OpenID Provider and contains information about the end user in the form of claims.
+· claim: The claim is a piece of information about the end user.
+The high-level flow looks the same for both OpenID Connect and regular OAuth 2.0 flows. The primary difference is that an OpenID Connect flow results in an ID token, in addition to any access or refresh tokens.
 
-A cyber attack is a malicious and deliberate attempt by cybercriminals to disrupt, degrade, or gain unauthorized access to a computer system or network using various techniques and tools. These attacks can range from simple phishing attempts to more sophisticated and coordinated assaults that exploit vulnerabilities in software or hardware. Common targets of cyber attacks include personal email accounts and financial information, as well as government departments and other organizations that hold sensitive data. Additionally, cyber attackers may seek to exfiltrate, corrupt, or destroy valuable data and disrupt the normal functioning of targeted systems.
-
-1. Advanced tips for cyber protection:
-· Implement robust password hygiene by utilizing complex and unique passphrases that contain a combination of uppercase and lowercase letters, numerals, and special characters. Avoid using easily guessable information such as personal information in your passwords.
-· Adopt a defense-in-depth approach by deploying spam filters to block unwanted emails, phishing attempts, and malicious attachments.
-· Regularly perform data backups to preserve critical files and information in case of data loss or corruption.
-· Exercise caution when browsing the internet and only visit reputable websites. To prevent unwanted ads and malicious scripts, utilize browser extensions such as pop-up blockers and ad-blockers.
-· Clear your browsing history and cache to prevent malicious actors from tracking your online activity and exploiting stored cookies.
-· Be vigilant when receiving unsolicited emails or messages from unknown sources and avoid opening attachments or clicking on links from untrusted sources.
-· Power off or hibernate your devices when not in use to prevent unauthorized access and minimize the attack surface.
-Note: The above tips can help to protect you from various types of cyber threats but it is still possible to experience a cyber attack despite taking these precautions. It's important to stay informed about the latest threats and trends in cybersecurity and continuously monitor your systems for signs of compromise.
-
-2. Firewalls are a critical component of an organization's security architecture, serving as a first line of defense against cyber attacks. They carefully inspect and monitor incoming network traffic by applying predefined security rules and policies, and filter out malicious or anomalous traffic from untrusted or unsecured sources.
-Firewalls operate at the network layer, typically at the boundary of a private network and the internet, and provide a barrier between internal and external networks by regulating access to specific ports and services.
-Firewalls can be implemented in both hardware and software forms, with hardware firewalls being deployed as dedicated appliances that sit at the network perimeter and software firewalls being integrated into endpoint devices such as laptops and servers.
-For optimal security, it is recommended to have both types of firewalls in place, as a combination of both hardware and software firewalls can provide a more comprehensive and robust defense against cyber threats.
-
-3. Types of software firewalls:
-
-Network address translation (NAT) firewalls provide an additional layer of security by obscuring the internal IP addresses of devices on a network from external actors. By using NAT, multiple devices can share a single public IP address, which makes it more difficult for attackers to gain access to a specific device by IP address scanning. This feature also helps to minimize the attack surface of a network by hiding internal IP addresses and making it more challenging for an attacker to identify exploitable vulnerabilities.
-
-Stateful multilayer inspection (SMLI) firewalls are advanced firewall technologies that provide robust security by performing deep packet inspection at multiple layers of the OSI model. SMLI firewalls inspect and analyze incoming network traffic at the network, transport, and application layers, comparing the packets against a database of known trusted packets. The firewall only allows packets to pass if they pass each layer individually, which increases the firewall's ability to detect and block malicious traffic. This method of inspection adds another layer of security by verifying the authenticity and integrity of the packet and its contents, enabling the firewall to detect and prevent advanced threats such as malware and zero-day exploits.
-4. Antivirus anti-spyware package
-
-An antivirus and an anti-spyware solution is a type of software that serves as a protective measure against various forms of malicious software, including viruses, malware, and spyware. Antivirus software employs signature-based and heuristic-based detection methods to scan and identify known malicious code on a system and take appropriate remediation actions, such as quarantining or deleting the detected threat. Anti-spyware software, on the other hand, is specifically engineered to detect and eliminate spyware, a category of malware that is designed to secretly gather information about the user or the system or to control the system's behavior without the user's knowledge or consent.
-Both antivirus and anti-spyware software can be integrated with a host-based intrusion prevention system (HIPS) which creates a more robust defense against cyber threats by monitoring system activity, identifying and blocking malicious behavior, and providing real-time protection.
-It is essential to keep the software updated and active to ensure maximum protection and coverage against the latest threats.
-
-5. Virtualization as Security Mitigation Technique
-
-Navigating untrusted or malicious websites can expose a system to many cyber threats, including malware, spyware, and viruses. While one of the most effective ways to avoid such browser-borne intrusions is to avoid visiting potentially unsafe sites, virtualization can provide an additional layer of security by allowing the execution of a browser in a virtualized environment. This approach, also known as sandboxing, isolates the browser's activity from the host operating system, effectively containing any potential malware or malicious payloads, and preventing them from propagating to the underlying system.
-Virtualization solutions such as Parallels and VMware Fusion, enable users to create virtual machines that run on top of the host operating system, providing a dedicated and isolated environment for executing applications and browsing the web. This technique allows for a more secure browsing experience by compartmentalizing any potential threats and reducing the attack surface of the host operating system.
-Additionally, Virtualization technology is also used to segregate sensitive data and applications in a different environment, allowing for more secure and controlled access to sensitive data, and allowing for easy rollback and recovery in case of a security incident.
-
-6. Disable Autocomplete for Enhanced Privacy and Security
-Autocomplete is a feature that automatically saves and suggests previously entered data, such as passwords, login credentials, and other sensitive information, in a browser for the convenience of the user. However, this feature can pose a significant security risk if the device is lost or stolen, as it can potentially enable unauthorized access to sensitive data.
-Additionally, autocomplete can also store information about your browsing history and search queries, which can be used to track your online activity and compromise your privacy.
-To mitigate these risks, it is advisable to disable autocomplete on all web browsers, by going to the browser's settings and disabling the feature. This can help to protect your personal information and reduce the risk of unauthorized access, and prevent your online activity from being tracked by malicious actors. Additionally, it's important to regularly clear your browser history, cache, and cookies to prevent malicious actors from exploiting stored data.
-Another way to increase security is to use password manager tools that can store passwords in an encrypted format and automatically populate the fields, without saving the information on the browser.
 1
 
+Authentication vs. Authorization
+ 
+ 
 1
  
+Authentication vs. Authorization
  
-Cyber 
-A
-ttack 
-P
-revention
+What's the difference between 
+authentication
  
- 
-A cyber attack
- 
-is a malicious and deliberate attempt by cybercriminals to 
-disrupt, degrade, or gain unauthorized access to a computer system or 
-network using various techniques and tools. These attacks can range from 
-simple phishing attempts to more sophisticated and co
-ordinated assaults 
-that exploit vulnerabilities in software or hardware. Common targets of 
-cyber attacks include personal email accounts and financial information, 
-as well as government departments and other organizations that hold 
-sensitive data. Addition
-ally, cyber attackers may seek to exfiltrate, corrupt, 
-or destroy valuable data and disrupt the normal functioning of targeted 
-systems.
- 
- 
-1.
- 
-Advanced tips for cyber protection:
- 
+and 
+authorization
 ?
  
-Implement robust 
-password hygiene
+Authentication
  
-by utilizing complex and 
-unique passphrases that 
-contain a combination of uppercase and 
-lowercase letters, numerals, and special characters. Avoid using 
-easily guessable information such as personal information in your 
-passwords.
+confirms
  
-?
+that users are who they say they 
+are. 
+Authorization
  
-Adopt a defense
--
-in
--
-depth approach by 
-deploying spam filters
+gives those users 
+permission
  
-to 
-block unwant
-ed emails, phishing attempts, and malicious 
-attachments.
+to access a resource.
  
-?
+While authentication and 
+authorization might sound similar, they are 
+distinct
  
-Regularly perform 
-data backups
+security processes
  
-to preserve critical files and 
-information in case of data loss or corruption.
+in the world of 
+identity
  
-?
+and access 
+management (IAM).
  
-Exercise caution when browsing the internet and only visit reputable 
-websites. 
-To prevent
+What Is Authentication?
  
-unwanted ads and malicious scripts, utilize 
-browser extensions such as pop
--
-up blockers and ad
--
-blockers
+Authentication is the act of validating that users are whom they claim 
+to be. This is the first step in an
+y 
+security process
 .
  
-?
  
-Clear your browsing history
+An 
+authentication process 
+is complete with:
  
-and cache to prevent malicious 
-actors from tracking your online activity and exploiting stored 
-cookies.
+·
  
-?
+Passwords 
+-
  
-Be vigilant when 
-receiving unsolicited emails or messages from 
-unknown sources and avoid opening attachments or clicking on 
-links from untrusted sources.
+u
+sernames and passwords
  
-?
+are the most common 
+authentication factors
+. If a user enters the correct data, the system 
+assumes the identity is valid and 
+grants access
+.
  
-Power off or hibernate your devices
+·
  
-when not in use to prevent 
-unauthorized access and minimize the attack surface.
+One
+-
+time pins 
+-
+ 
+grant access for only one session or transaction.
+ 
+·
+ 
+Authentication apps 
+-
+ 
+g
+enerate 
+security codes 
+via an outside party 
+that grants access.
+ 
+·
+ 
+Biometrics 
+-
+ 
+a
+ 
+user presents a fingerprint or eye scan to 
+gain access 
+to the system.
+ 
+ 
+In some instances, systems requir
+e the successful verification of more 
+than one factor before granting access. This multi
+-
+factor authentication 
+(MFA) requirement is often deployed to increase security beyond what 
+passwords alone can provide.
+ 
+What Is Authorization?
+ 
+Authorization in system 
+security is the process of giving the user 
+permission to access a specific resource or function. This term is often 
+used interchangeably with access control or client privilege.
+ 
+Giving someone permission to download a particular file on a server or 
+providi
+ng individual users with administrative access to an application are 
+good examples of authorization.
+ 
+In secure environments, authorization must always follow authentication. 
+Users should first prove that their identities are genuine before an 
+organization’
+s administrators grant them access to the requested 
+resources.
+ 
+Authentication vs. Authorization
+ 
+Despite the similar
+-
+sounding terms, authentication and authorization are 
+separate
+ 
+steps in the login process. Understanding the difference 
+between the two is ke
+y to successfully implementing an IAM solution.
  
 
 /docProps/thumbnail.emf
 
+Authentication vs. Authorization 
+ 
 1 
- 
-Cyber Attack Prevention 
- 
-A cyber attack is a malicious and deliberate attempt by cybercriminals to 
-disrupt, degrade, or gain unauthorized access to a computer system or 
-network using various techniques and tools. These attacks can range from 
-simple phishing attempts to more sophisticated and coordinated assaults 
-that exploit vulnerabilities in software or hardware. Common targets of 
-cyber attacks include personal email accounts and financial information, 
-as well as government departments and other organizations that hold 
-sensitive data. Additionally, cyber attackers may seek to exfiltrate, corrupt, 
-or destroy valuable data and disrupt the normal functioning of targeted 
-systems. 
- 
-1. Advanced tips for cyber protection: 
-? Implement robust password hygiene by utilizing complex and 
-unique passphrases that contain a combination of uppercase and 
-lowercase letters, numerals, and special characters. Avoid using 
-easily guessable information such as personal information in your 
-passwords. 
-? Adopt a defense-in-depth approach by deploying spam filters to 
-block unwanted emails, phishing attempts, and malicious 
-attachments. 
-? Regularly perform data backups to preserve critical files and 
-information in case of data loss or corruption. 
-? Exercise caution when browsing the internet and only visit reputable 
-websites. To prevent unwanted ads and malicious scripts, utilize 
-browser extensions such as pop-up blockers and ad-blockers. 
-? Clear your browsing history and cache to prevent malicious 
-actors from tracking your online activity and exploiting stored 
-cookies. 
-? Be vigilant when receiving unsolicited emails or messages from 
-unknown sources and avoid opening attachments or clicking on 
-links from untrusted sources. 
-? Power off or hibernate your devices when not in use to prevent 
-unauthorized access and minimize the attack surface. 
+Authentication vs. Authorization 
+What's the difference between authentication and 
+authorization? Authentication confirms that users are who they say they 
+are. Authorization gives those users permission to access a resource. 
+While authentication and authorization might sound similar, they are 
+distinct security processes in the world of identity and access 
+management (IAM). 
+What Is Authentication? 
+Authentication is the act of validating that users are whom they claim 
+to be. This is the first step in any security process.  
+An authentication process is complete with: 
+ Passwords - usernames and passwords are the most common 
+authentication factors. If a user enters the correct data, the system 
+assumes the identity is valid and grants access. 
+ One-time pins - grant access for only one session or transaction. 
+ Authentication apps - generate security codes via an outside party 
+that grants access. 
+ Biometrics - a user presents a fingerprint or eye scan to gain access 
+to the system.  
+In some instances, systems require the successful verification of more 
+than one factor before granting access. This multi-factor authentication 
+(MFA) requirement is often deployed to increase security beyond what 
+passwords alone can provide. 
+What Is Authorization? 
+Authorization in system security is the process of giving the user 
+permission to access a specific resource or function. This term is often 
+used interchangeably with access control or client privilege. 
+Giving someone permission to download a particular file on a server or 
+providing individual users with administrative access to an application are 
+good examples of authorization. 
+In secure environments, authorization must always follow authentication. 
+Users should first prove that their identities are genuine before an 
+organization’s administrators grant them access to the requested 
+resources. 
+Authentication vs. Authorization 
+Despite the similar-sounding terms, authentication and authorization are 
+separate steps in the login process. Understanding the difference 
+between the two is key to successfully implementing an IAM solution. 
