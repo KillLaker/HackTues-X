@@ -86,6 +86,7 @@ def get_user(username, password):
     cursor.execute("select * from User where username = %s", (username,))
     user = cursor.fetchone()
     # print(user)
+    cursor.close()
 
     if argon2.verify_password(bytes(user[2]), password.encode('utf-8')):
         return user
@@ -101,6 +102,7 @@ def get_username(user_id):
 
     cursor.execute("SELECT username FROM User WHERE id = %s", (user_id,))
     user = cursor.fetchone()
+    cursor.close()
 
     if user is not None:
         return user[0]
@@ -182,6 +184,7 @@ def get_prev_quiz_id():
     cursor.execute("SELECT id FROM quiz ORDER BY id DESC LIMIT 1")
     quiz_id = cursor.fetchone()
     cursor.close()
+
     if quiz_id:
         return quiz_id[0]
     else:
@@ -355,40 +358,77 @@ def submit_edited_quiz(quiz_id):
     try:
         if 'token' not in session:
             return redirect(url_for('login', trigger_alert = True))
+
+        token = session['token']
+        json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+        owner_id = json_token_student['id']
     except jwt.exceptions.ExpiredSignatureError:
         flash("Either no account detected or session")
         return redirect(url_for('login', trigger_alert = True))
 
     if request.form.get('save-button'):
+        updated_quiz = get_quiz_from_form()
 
-        #! Implement a method to get the edited quiz vlaues from the request form !!!
-
-        print(updated_quiz)
-
-        if update_quizDB(quiz_id, updated_quiz):
+        if update_quizDB(quiz_id, updated_quiz, owner_id):
             flash("Quiz updated successfully")
         else:
             flash("Quiz updated failed")
 
-        return redirect(url_for('quiz', quiz_id=quiz_id))
-    elif request.form.get('cancel-button'):
-        print("HERE")
-        return redirect(url_for('profile'))
+
+    return redirect(url_for('profile'))
 
 
-def update_quizDB(quiz_id, updated_quiz):
+def get_quiz_from_form():
+    updated_quiz = {
+        'quiz-name': request.form.get('quiz-name'),
+        'questions': []
+    }
+
+    current_question = {}
+    for key, value in request.form.items():
+        if key.startswith('question_') and key.endswith('_value'):
+            if len(current_question) != 0:
+                updated_quiz['questions'].append(current_question)
+
+            current_question = {}
+            current_question['question'] = value
+            current_question['answers'] = []
+        elif key.startswith('answer_'):
+            current_question['answers'].append(value)
+        elif key.startswith('question_') and key.endswith('_right_answer'):
+            current_question['right_answer'] = value
+
+    return updated_quiz
+
+@app.route('/quiz/<int:quiz_id>/delete', methods=['GET'])
+def delete_quiz(quiz_id):
+    cursor = cnx.cursor()
+
+    cursor.execute("START TRANSACTION")
+
+    cursor.execute("DELETE FROM options WHERE question_id IN(SELECT id FROM questions WHERE quiz_id = %s)", (quiz_id,))
+    cursor.execute("DELETE FROM questions WHERE quiz_id = %s", (quiz_id,))
+    cursor.execute("DELETE FROM quiz WHERE id = %s", (quiz_id, ))
+
+    cnx.commit()
+    cursor.close()
+
+    return redirect(url_for('profile'))
+
+
+
+def update_quizDB(quiz_id, updated_quiz, owner_id):
 
     cursor = cnx.cursor()
 
     try:
         cursor.execute("START TRANSACTION")
 
-        cursor.execute("DELETE FROM options WHERE question_id IN(SELECT id FROM questions WHERE quiz_id = %s)", (quiz_id,))
-        cursor.execute("DELETE FROM questions WHERE quiz_id = %s", (quiz_id,))
+        delete_quiz(quiz_id)
 
-        print(updated_quiz)
+        cursor.execute("INSERT INTO quiz (id, name, ownerId) VALUES(%s, %s, %s)", (quiz_id, updated_quiz['quiz-name'], owner_id, ))
 
-        for question in updated_quiz:
+        for question in updated_quiz['questions']:
             # Insert question
             cursor.execute("INSERT INTO questions (quiz_id, question_text) VALUES (%s, %s)",
                            (quiz_id, question['question']))
@@ -396,7 +436,7 @@ def update_quizDB(quiz_id, updated_quiz):
 
             # Insert options
             for option_text in question['answers']:
-                is_correct = (option_text.upper() == question['right_answer'].upper())
+                is_correct = (option_text.upper()[0] == question['right_answer'].upper())
                 cursor.execute("INSERT INTO options (question_id, option_text, is_correct) VALUES (%s, %s, %s)",
                                (question_id, option_text, is_correct))
 

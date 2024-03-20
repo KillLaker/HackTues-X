@@ -78,6 +78,29 @@ body {
     transform: scale(1.05);
     background-color: #6e32a8;
 }
+
+.quiz-delete-button {
+    background-color: #5712905a;
+    border-radius: 10px;
+    padding: 10px 0;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.4em;
+    font-weight: bold;
+    max-width: 600px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    transition: transform 0.2s;
+    width:5%;
+    margin-right: 30px;
+}
+.quiz-delete-button:hover {
+    transform: scale(1.05);
+    background-color: #6e32a8;
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;

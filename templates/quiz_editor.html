@@ -19,18 +19,18 @@
 
         <div class="main-page">
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
-                <h1>{{ quiz_name }}</h1>
+                <h1><input type = "text" name = "quiz-name" class = "quiz-title-edit" value = "{{ quiz_name }}" form = "quiz-form" required></h1>
             </div>
-            <form class="w-70 text-center" action = "/quiz_editor/{{ quiz_id }}/submit" method = "post" name = "quiz-form">
+            <form class="w-70 text-center" action = "/quiz_editor/{{ quiz_id }}/submit" method = "post" name = "quiz-form" id = "quiz-form">
                 {% set questionCounter = namespace(value=1) %}
                 {% for question in quiz %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
-                        <h2><label><input type = "text" name = "question_{{ questionCounter.value }}_value" class = "question-edit" value = "{{ question.question }}"></label></h2>
+                        <h2><label><input type = "text" name = "question_{{ questionCounter.value }}_value" class = "question-edit" value = "{{ question.question }}" required></label></h2>
                         {% set ns = namespace(counter=0) %}
                         {% for answer in question.answers %}
                             <div class="options">
                                 <input type="radio" name="question_{{ questionCounter.value }}_right_answer" value="{{ 'ABCD'[ns.counter] }}" {% if answer == question.right_answer %} checked {% endif %} required>
-                                <label><input type = "text" name = "question_{{ questionCounter.value }}_answer_{{ ns.counter + 1}}" value = "{{ answer }}"></label>
+                                <label><input type = "text" class = "answer-edit" name = "answer_{{ questionCounter.value }}_{{ ns.counter + 1}}" value = "{{ answer }}" required></label>
                             </div>
                             <br>
                             {% set ns.counter = ns.counter + 1 %}

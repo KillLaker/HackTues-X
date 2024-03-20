@@ -105,7 +105,6 @@ input[type="text"] {
     background: none;
     border: #742cb8 solid 2px;
     border-radius: 10px;
-    font-size: 15px;
     color: white;
     padding-left: 5px;
     width: 100%;
@@ -113,9 +112,9 @@ input[type="text"] {
 
 .question-edit {
     display: block;
-    font-size: 1.5em;
     margin: 0.83em 0;
     font-weight: bold;
+    font-size: 16px;
 }
 
 .save-options-buttons {
@@ -157,4 +156,12 @@ input[type="text"] {
 .cancel-button:hover {
     background-color: rgba(197, 122, 252, 0.31);
     border: none;
+}
+
+.quiz-title-edit {
+    font-size: 30px;
+}
+
+.answer-edit {
+    font-size: 14px;
 }
