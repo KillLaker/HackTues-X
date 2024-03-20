@@ -31,7 +31,7 @@
         {% for quiz in quizzes %}
             <div class="quiz-buttons">
                 {% if teacher %}
-                <a href="/quiz_edit/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                <a href="/quiz_editor/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
                 <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
                 {% else %}
                 <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>

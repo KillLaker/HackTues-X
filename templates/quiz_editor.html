@@ -21,7 +21,7 @@
             <div class="quiz-bubble w-50 text-center px-20 mx-20">
                 <h1>{{ quiz_name }}</h1>
             </div>
-            <form class="w-70 text-center" action = "/quiz/{{ quiz_id }}/submit" method = "post" name = "quiz-form">
+            <form class="w-70 text-center" action = "/quiz_editor/{{ quiz_id }}/submit" method = "post" name = "quiz-form">
                 {% set questionCounter = namespace(value=1) %}
                 {% for question in quiz %}
                     <div class="text-left quiz-bubble mx-20 p-53015">
@@ -40,8 +40,8 @@
                 {% endfor %}
 
                 <div class = "save-options-buttons">
-                    <input class = "save-options-button save-button" type = "submit" value = "Save">
-                    <input class = "save-options-button cancel-button" type = "submit" value = "Cancel"></input>
+                    <input class = "save-options-button save-button" type = "submit" value = "Save" name = "save-button">
+                    <input class = "save-options-button cancel-button" type = "submit" value = "Cancel" name = "cancel-button">
                 </div>
             </form>
         </div>

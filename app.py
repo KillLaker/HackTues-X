@@ -63,7 +63,7 @@ def login():
         return render_template("login.html", trigger_alert = trigger_alert)
 
 
-@app.route('/logout', methods = ['GET'])
+@app.route('/logout', methods=['GET'])
 def logout():
     try:
         if 'token' not in session:
@@ -288,7 +288,52 @@ def quiz(quiz_id):
     return render_template('quiz.html', quiz_name=quiz_name,  quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 
-@app.route("/quiz_edit/<int:quiz_id>", methods=['POST'])
+# --------------------------------------------- #
+#    Handles quiz submitting with generating a  #
+#    file in this format quizId_studentId.txt   #
+# --------------------------------------------- #
+
+@app.route('/quiz/<int:quiz_id>/submit', methods=['POST'])
+def submit_quiz(quiz_id):
+    form_data = request.form
+    selected_options = []
+    for key, value in form_data.items():
+        if key.startswith('question_'):
+            if value:
+                selected_options.append(value)
+
+    post_request_text = '\n'.join(selected_options)
+
+    try:
+        token = session['token']
+        json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+        student_id = json_token_student['id']
+        # print(student_id)
+    except jwt.exceptions.ExpiredSignatureError:
+        return "<h1>Expired session!</h1>"
+
+    directory = "Student_answers/"
+    filename = f'{quiz_id}_{student_id}.txt'
+    filepath = os.path.join(directory, filename)
+    os.makedirs(directory, exist_ok=True)
+    with open(filepath, 'w') as f:
+        f.write(post_request_text)
+    combine_student_answers(directory)
+
+    quiz_name, quiz = get_quiz(quiz_id)
+    if quiz is None:
+        return "Quiz not found", 404
+
+    correct_answers_full = [q['right_answer'] for q in quiz]
+    correct_answers = [answer[0].upper() for answer in correct_answers_full]
+    num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
+
+    return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options),
+                           selected_options=selected_options, correct_options=correct_answers,
+                           is_logged_in=session.get('token', False))
+
+
+@app.route("/quiz_editor/<int:quiz_id>", methods=['GET'])
 def edit_quiz(quiz_id):
     try:
         if 'token' not in session:
@@ -297,26 +342,39 @@ def edit_quiz(quiz_id):
         flash("Either no account detected or session")
         return redirect(url_for('login', trigger_alert = True))
 
-    if request.method == 'POST':
-        quiz_name = request.form['quiz_name']
-        updated_quiz = request.form.getlist('updated_quiz')
-        #new_question_text = request.form['new_question_text']
-        #new_option_text = request.form['new_option_text']
+    quiz_name, quiz = get_quiz(quiz_id)
+    if quiz is None:
+        return "Quiz not found", 404
 
-        if update_quizDB(quiz_name, updated_quiz):
+    return render_template('quiz_editor.html', quiz_name=quiz_name, quiz=quiz, quiz_id=quiz_id,
+                           is_logged_in=session.get('token', False))
+
+
+@app.route("/quiz_editor/<int:quiz_id>/submit", methods=['POST'])
+def submit_edited_quiz(quiz_id):
+    try:
+        if 'token' not in session:
+            return redirect(url_for('login', trigger_alert = True))
+    except jwt.exceptions.ExpiredSignatureError:
+        flash("Either no account detected or session")
+        return redirect(url_for('login', trigger_alert = True))
+
+    if request.form.get('save-button'):
+
+        #! Implement a method to get the edited quiz vlaues from the request form !!!
+
+        print(updated_quiz)
+
+        if update_quizDB(quiz_id, updated_quiz):
             flash("Quiz updated successfully")
         else:
             flash("Quiz updated failed")
 
         return redirect(url_for('quiz', quiz_id=quiz_id))
+    elif request.form.get('cancel-button'):
+        print("HERE")
+        return redirect(url_for('profile'))
 
-    else:
-        quiz_name, quiz = get_quiz(quiz_id)
-        if quiz is None:
-            return "Quiz not found", 404
-
-        return render_template('quiz_editor.html', quiz_name=quiz_name, quiz=quiz, quiz_id=quiz_id,
-                               is_logged_in=session.get('token', False))
 
 def update_quizDB(quiz_id, updated_quiz):
 
@@ -327,6 +385,8 @@ def update_quizDB(quiz_id, updated_quiz):
 
         cursor.execute("DELETE FROM options WHERE question_id IN(SELECT id FROM questions WHERE quiz_id = %s)", (quiz_id,))
         cursor.execute("DELETE FROM questions WHERE quiz_id = %s", (quiz_id,))
+
+        print(updated_quiz)
 
         for question in updated_quiz:
             # Insert question
@@ -352,49 +412,6 @@ def update_quizDB(quiz_id, updated_quiz):
     finally:
         cursor.close()
 
-
-
-# --------------------------------------------- #
-#    Handles quiz submitting with generating a  #
-#    file in this format quizId_studentId.txt   #
-# --------------------------------------------- #
-
-@app.route('/quiz/<int:quiz_id>/submit', methods=['POST'])
-def submit_quiz(quiz_id):
-    form_data = request.form
-    selected_options = []
-    for key, value in form_data.items():
-        if key.startswith('question_'):
-            if value:
-                selected_options.append(value)
-
-    post_request_text = '\n'.join(selected_options)
-
-    try:
-        token = session['token']
-        json_token_student = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
-        student_id = json_token_student['id']
-        # print(student_id)
-    except jwt.exceptions.ExpiredSignatureError:
-        return "<h1>Expired session!</h1>"
-    
-    directory = "Student_answers/"
-    filename = f'{quiz_id}_{student_id}.txt'
-    filepath = os.path.join(directory, filename)
-    os.makedirs(directory, exist_ok=True)
-    with open(filepath, 'w') as f:
-        f.write(post_request_text)
-    combine_student_answers(directory)
-
-    quiz_name, quiz = get_quiz(quiz_id)
-    if quiz is None:
-        return "Quiz not found", 404
-    
-    correct_answers_full = [q['right_answer'] for q in quiz]
-    correct_answers = [answer[0].upper() for answer in correct_answers_full]
-    num_correct = sum(a == b for a, b in zip(selected_options, correct_answers))
-
-    return render_template('results.html', quiz=quiz, num_correct=num_correct, total_questions=len(selected_options), selected_options=selected_options, correct_options=correct_answers, is_logged_in=session.get('token', False))
 
 # --------------------------------------------- #
 #  My profile page where quizzes are displayed  #

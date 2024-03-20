@@ -1,0 +1,61 @@
+6
+1. What is the main goal of authentication?
+A. To grant permission to access resources
+B
+B. To confirm users' identities
+C. To validate permissions
+D. To generate security codes
+2. What factor is commonly used in multi-factor authentication (MFA)?
+A. Authentication apps
+B
+B. Biometrics
+C. One-time pins
+D. Passwords
+3. In the analogy provided, what does the key represent?
+A. Authorization
+B. Permission
+C
+C. Authentication
+D. Access
+4. What is the primary purpose of authorization in system security?
+A. Validate identities
+B
+B. Grant access to resources
+C. Generate security codes
+D. Confirm permissions
+5. Which protocol focuses on providing scoped access tokens for API security?
+A
+A. OAuth 2.0
+B. OpenID Connect
+C. MFA
+D. SSO
+6. What is the role of the client in the OAuth 2.0 protocol?
+A. Issue access tokens
+B. Grant permission to access resources
+C
+C. Request access token
+D. Verify token validity
+7. What is the purpose of the refresh token in OAuth 2.0?
+A. Issue access tokens
+B. Verify token validity
+C
+C. Exchange for a new access token
+D. Grant permission to access resources
+8. What additional token does OpenID Connect provide in comparison to OAuth 2.0?
+A. Refresh token
+B
+B. ID token
+C. Access token
+D. Claim
+9. What is the end user's role in the OpenID Connect flow?
+A. Issue the access token
+B. Request the ID token
+C. Verify token validity
+D
+D. Provide information contained in the ID token
+10. What is the key difference between OAuth 2.0 and OpenID Connect?
+A. Scope of access
+B. Token issuance
+C. Claims information
+D
+D. ID token provision
