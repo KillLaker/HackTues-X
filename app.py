@@ -398,6 +398,8 @@ def get_quiz_from_form():
         elif key.startswith('question_') and key.endswith('_right_answer'):
             current_question['right_answer'] = value
 
+    updated_quiz['questions'].append(current_question)
+
     return updated_quiz
 
 @app.route('/quiz/<int:quiz_id>/delete', methods=['GET'])
@@ -425,6 +427,8 @@ def update_quizDB(quiz_id, updated_quiz, owner_id):
         cursor.execute("START TRANSACTION")
 
         delete_quiz(quiz_id)
+
+        print(updated_quiz)
 
         cursor.execute("INSERT INTO quiz (id, name, ownerId) VALUES(%s, %s, %s)", (quiz_id, updated_quiz['quiz-name'], owner_id, ))
 
