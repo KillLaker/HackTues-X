@@ -31,7 +31,7 @@
         {% for quiz in quizzes %}
             <div class="quiz-buttons">
                 {% if teacher %}
-                <a href="/quiz/{{ quiz['id'] }}/delete" class="quiz-delete-button">X</a>
+                <a href="#" onclick="showConfirmation('{{ quiz['id'] }}')" class="quiz-delete-button">X</a>
                 <a href="/quiz_editor/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
                 <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
                 {% else %}
@@ -41,5 +41,27 @@
         {% endfor %}
         </div>
     </div>
+
+    <div id="confirmationPopup" style="display: none;">
+        <p>Are you sure you want to delete this quiz?</p>
+        <button onclick="deleteQuiz()">Yes</button>
+        <button onclick="hideConfirmation()">No</button>
+    </div>
+
+    <script>
+        function showConfirmation(quizId) {
+            document.getElementById('confirmationPopup').style.display = 'block';
+            document.getElementById('confirmationPopup').setAttribute('data-quiz-id', quizId);
+        }
+
+        function deleteQuiz() {
+            var quizId = document.getElementById('confirmationPopup').getAttribute('data-quiz-id');
+            window.location.href = "/quiz/" + quizId + "/delete";
+        }
+
+        function hideConfirmation() {
+            document.getElementById('confirmationPopup').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
