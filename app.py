@@ -14,6 +14,7 @@ from convert_files_to_txt import *
 from dotenv import load_dotenv
 from student_answers import combine_student_answers
 from flask import url_for
+import datetime
 
 load_dotenv()
 cnx = mysql.connector.connect(
@@ -255,17 +256,21 @@ def get_quiz(quiz_id):
 #  Gets all the quizzes by the userid #
 # ----------------------------------- #
 
-def get_quizzes_by_user(user_id):
+def get_quizzes_by_user(user_id, user_role):
     cursor = cnx.cursor()
 
-    cursor.execute("SELECT id, name FROM quiz WHERE ownerId = %s", (user_id,))
-    quiz_rows = cursor.fetchall()
+    if user_role == 1:
+        cursor.execute("SELECT id, name, status FROM quiz WHERE ownerId = %s", (user_id,))
+    else:
+        cursor.execute("SELECT q.id, q.name, q.status FROM quiz q WHERE q.group_id MEMBER OF ((SELECT json_arrayagg(sg.group_id) FROM student_group sg WHERE sg.student_id = %s)) AND q.status != 0", (user_id, ))
 
+    quiz_rows = cursor.fetchall()
     quizzes = []
     for row in quiz_rows:
         quizzes.append({
             'id': row[0],
-            'name': row[1]
+            'name': row[1],
+            'status': row[2]
         })
 
     cursor.close()
@@ -458,6 +463,26 @@ def update_quizDB(quiz_id, updated_quiz, owner_id):
         cursor.close()
 
 
+def get_groups_by_teacher(teacher_id):
+    cursor = cnx.cursor()
+
+    cursor.execute("SELECT g.id, g.name FROM `group` g JOIN teacher_group tg ON g.id = tg.group_id WHERE tg.teacher_id = %s", (teacher_id, ))
+
+    rows = cursor.fetchall()
+
+    groups = []
+    for row in rows:
+        current_group = {
+            "id": row[0],
+            "name": row[1]
+        }
+
+        groups.append(current_group)
+
+    cursor.close()
+
+    return groups
+
 # --------------------------------------------- #
 #  My profile page where quizzes are displayed  #
 # --------------------------------------------- #
@@ -472,11 +497,39 @@ def profile():
         token = session['token']
         json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
         user_id = json_token['id']
-        quizzes = get_quizzes_by_user(user_id)
+        quizzes = get_quizzes_by_user(user_id, json_token['permission'])
+        groups = get_groups_by_teacher(user_id)
 
-        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1)
+        return render_template('profile.html', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1, groups=groups)
     except jwt.exceptions.ExpiredSignatureError:
         return redirect(url_for('login', trigger_alert = True))
+
+
+@app.route('/quiz/<int:quiz_id>/send', methods=['POST'])
+def send_quiz_to_students(quiz_id):
+    try:
+        if 'token' not in session:
+            flash("Either no account detected or session expired!")
+            return redirect(url_for('login', trigger_alert=True))
+
+        token = session['token']
+        json_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')
+        user_id = json_token['id']
+
+        cursor = cnx.cursor()
+
+        cursor.execute("UPDATE quiz SET status=1, group_id=%s, start_time=%s, end_time=%s WHERE id = %s", (request.form.get('group'), datetime.datetime.now(), request.form.get('end-time'), quiz_id))
+
+        cnx.commit()
+        cursor.close()
+
+        quizzes = get_quizzes_by_user(user_id, json_token['permission'])
+        groups = get_groups_by_teacher(user_id)
+
+        return redirect(url_for('profile', quizzes=quizzes, username=get_username(user_id), is_logged_in=session.get('token', False), teacher=json_token['permission'] == 1, groups=groups))
+    except jwt.exceptions.ExpiredSignatureError:
+        return redirect(url_for('login', trigger_alert=True))
+
 
 @app.route('/quiz/<int:quiz_id>/statistics')
 def get_statistics(quiz_id):

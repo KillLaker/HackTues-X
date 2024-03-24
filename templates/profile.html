@@ -23,22 +23,48 @@
         <h1 class="main-title">Hello, {{ username }}</h1>
         {% if teacher %}
         <a href='/' class="create-quiz-btn">Create new quiz</a>
-        {% else %}
-        <p>You have to be a teacher to create a quiz.</p>
         {% endif %}
 
         <div class="buttons">
-        {% for quiz in quizzes %}
-            <div class="quiz-buttons">
-                {% if teacher %}
-                <a href="#" onclick="showConfirmation('{{ quiz['id'] }}')" class="quiz-delete-button">X</a>
-                <a href="/quiz_editor/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
-                <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
-                {% else %}
-                <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
-                {% endif %}
-            </div>
-        {% endfor %}
+            {% for quiz in quizzes %}
+                <div class="quiz-buttons">
+                    {% if teacher %}
+                        <a href="#" onclick="showConfirmation('{{ quiz['id'] }}')" class="quiz-delete-button">X</a>
+                        {% if quiz['status'] == 0 %}
+                            <a href="/quiz_editor/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                            <a class="quiz-item-2 quiz-send-button" onclick = showSendWindow({{ quiz['id'] }})>Send</a>
+                        {% else %}
+                            <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                            <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                    {% endif %}
+                </div>
+
+                <div id = "send-window-{{ quiz['id'] }}" class = "send-window">
+                    <h2>Sending options for '{{ quiz['name'] }}'</h2>
+                    <form method = "post" action = "/quiz/{{ quiz['id'] }}/send" enctype="multipart/form-data" class = "send-form">
+                        <div class = "input-space">
+                            <span>Choose group: </span>
+                            <select name = "group" required>
+                                {% for group in groups %}
+                                    <option value = "{{ group['id'] }}">{{ group['name'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class = "input-space">
+                            <span>Choose due date and time: </span>
+                            <input type = "datetime-local" name = "end-time" required>
+                        </div>
+
+                        <div class = "send-form-buttons">
+                            <input type = "submit" value = "Send">
+                            <button onclick = hideCancelWindow({{ quiz['id'] }})>Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -61,6 +87,14 @@
 
         function hideConfirmation() {
             document.getElementById('confirmationPopup').style.display = 'none';
+        }
+
+        function showSendWindow(quizId) {
+            document.getElementById('send-window-' + quizId).style.display = 'flex';
+        }
+
+        function hideCancelWindow(quizId) {
+            document.getElementById('send-window-' + quizId).style.display = 'none';
         }
     </script>
 </body>
