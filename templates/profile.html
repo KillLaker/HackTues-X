@@ -38,7 +38,11 @@
                             <a href="/quiz/{{ quiz['id'] }}/statistics" class="quiz-item-2">Generate Statistics</a>
                         {% endif %}
                     {% else %}
-                        <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                        {% if quiz['status'] == 1 %}
+                            <a href="/quiz/{{ quiz['id'] }}" class="quiz-item">{{ quiz['name'] }}</a>
+                        {% elif quiz['status'] == 2 %}
+                            <h1>Rendered right questions</h1>
+                        {% endif %}
                     {% endif %}
                 </div>
 

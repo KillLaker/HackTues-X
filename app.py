@@ -230,6 +230,8 @@ def get_quiz(quiz_id):
         return None
 
     quiz_name = quiz_row[1]
+    quiz_status = quiz_row[3]
+    quiz_due_date = quiz_row[6]
     quiz = []
 
     cursor.execute("SELECT * FROM questions WHERE quiz_id = %s", (quiz_id,))
@@ -249,7 +251,7 @@ def get_quiz(quiz_id):
         quiz.append(question)
 
     cursor.close()
-    return quiz_name, quiz
+    return quiz_name, quiz_status, quiz_due_date, quiz
 
 
 # ----------------------------------- #
@@ -291,9 +293,18 @@ def quiz(quiz_id):
         flash("Either no account detected or session expired!")
         return redirect(url_for('login', trigger_alert = True))
     
-    quiz_name, quiz = get_quiz(quiz_id)
+    quiz_name, quiz_status, quiz_due_date, quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
+
+    if quiz_status == 1 and datetime.datetime.now() >= quiz_due_date:
+        cursor = cnx.cursor()
+        cursor.execute("UPDATE quiz SET status=%s WHERE id=%s", (2, quiz_id))
+        cnx.commit()
+        cursor.close()
+
+        return "<h1>Rendered result page</h1>"
+
     return render_template('quiz.html', quiz_name=quiz_name,  quiz=quiz, quiz_id=quiz_id, is_logged_in=session.get('token', False))
 
 
@@ -329,7 +340,7 @@ def submit_quiz(quiz_id):
         f.write(post_request_text)
     combine_student_answers(directory)
 
-    quiz_name, quiz = get_quiz(quiz_id)
+    quiz_name, quiz_statue, quiz_due_date, quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
 
@@ -351,7 +362,7 @@ def edit_quiz(quiz_id):
         flash("Either no account detected or session")
         return redirect(url_for('login', trigger_alert = True))
 
-    quiz_name, quiz = get_quiz(quiz_id)
+    quiz_name, quiz_status, quiz_due_date, quiz = get_quiz(quiz_id)
     if quiz is None:
         return "Quiz not found", 404
 
@@ -545,7 +556,7 @@ def get_statistics(quiz_id):
     
     CreateStatistics.create_statistics(quiz_id)
 
-    quiz_name, quiz = get_quiz(quiz_id)
+    quiz_name, quiz_status, quiz_due_date, quiz = get_quiz(quiz_id)
     print(quiz[1])
 
     return render_template('diagrams.html', diagrams_files=diagrams_files, statistics_files=statistics_files, quiz=quiz)
